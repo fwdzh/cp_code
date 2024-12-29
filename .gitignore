@@ -4,6 +4,8 @@
 # 忽略 C++ 编译过程中的临时文件
 *.d
 *.obj
+*.exe
+*.out
 
 # 忽略 Makefile 生成的文件
 Makefile
@@ -13,6 +15,7 @@ Makefile.in
 .idea/
 .vscode/
 .cph/
+./Excutable
 
 # 忽略调试文件
 debug/
