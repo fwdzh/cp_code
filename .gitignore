@@ -12,6 +12,8 @@ Makefile.in
 # 忽略所有 IDE 相关文件
 .idea/
 .vscode/
+templates/
+template/
 
 # 忽略调试文件
 debug/

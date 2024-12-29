@@ -1,10 +1,10 @@
 // Author: Zhangwuji
-// Date: 2024-12-18
-// Time: 00:05:39
+// Date: 2024-12-20
+// Time: 10:15:23
 
 // #define YUANSHEN
 #if defined(YUANSHEN)
-#include "D:/cp/template/debug.hpp"
+#include "/home/skadi/cp_code/templates/debug.hpp"
 #else
 #include <bits/stdc++.h>
 using namespace std;
@@ -35,31 +35,33 @@ using pll = pair<ll, ll>;
 constexpr int INF = 1000000000;
 constexpr ll LNF = 1000000000000000000LL;
 
-// constexpr int N = 2e5;
-// struct Fenwick{
-//     int b[N+5]={};
-//     int lowbit(int x){return (x)&(-x);}
-//     void add(int i,int x){
-//         while(i<=N){
-//             b[i]+=x;
-//             i+=lowbit(i);
-//         }
-//     }
-//     int get(int i){
-//         int res=0;
-//         while(i){
-//             res+=b[i];
-//             i-=lowbit(i);
-//         }
-//         return res;
-//     }
-//     int query(int l,int r){
-//         return get(r)-get(l-1);
-//     }
-// };
+void solve()
+{
+    int n, k;
+    cin >> n >> k;
+    vector<int> a(n + 1);
+    int cur = 1;
+    for (int i = k; i <= n; i+=k) {
+        a[i] = cur++;
+    }
+    for (int i = 1; i <= n; i++) {
+        if (!a[i])
+            a[i] = cur++;
+        cout << a[i] << " ";
+    }
+    cout << '\n';
+}
 
 int main()
 {
-    
+#ifndef YUANSHEN
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+    cout.tie(0);
+#endif
+    int T = 1;
+    cin >> T;
+    while (T--)
+        solve();
     return 0;
 }
