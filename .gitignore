@@ -6,6 +6,7 @@
 *.obj
 *.exe
 *.out
+*.cph
 
 # 忽略 Makefile 生成的文件
 Makefile
@@ -14,6 +15,8 @@ Makefile.in
 # 忽略所有 IDE 相关文件
 .idea/
 .vscode/
+*.cph/
+.cph/
 bin/
 template/
 # 忽略调试文件
