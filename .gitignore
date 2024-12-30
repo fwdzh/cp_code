@@ -18,3 +18,4 @@ bin/
 template/
 # 忽略调试文件
 debug/
+.cph/
