@@ -1,39 +1,10 @@
 # cp_code
 
 #### 介绍
-{**以下是 Gitee 平台说明，您可以替换此简介**
-Gitee 是 OSCHINA 推出的基于 Git 的代码托管平台（同时支持 SVN）。专为开发者提供稳定、高效、安全的云端软件开发协作平台
-无论是个人、团队、或是企业，都能够用 Gitee 实现代码托管、项目管理、协作开发。企业项目请看 [https://gitee.com/enterprises](https://gitee.com/enterprises)}
+这个仓库主要是用来存平时我写的算竞的代码的，但是24这一年的写了好多，但是我重置电脑了所以都没了。  
+这个是差不多只有25年开始的了，最开始我是不存代码的，然后24年4月开始我才把代码都存着，是因为看别人这样做才这样吧。感觉挺不错的，每次都在一个文件里写代码的话太没意思了。然后年底的时候，我那个文件夹，有几个GB的大小了，不过其实主要是因为编译的文件比较大，我记得有的好像有几MB，其实不存exe的话，会小很多很多。。。  
+还有一个原因是，我整了ubuntu和win双系统，所以用gitee可以同步两边的文件。。。因为我没有ubuntu的魔法，不能访问github。不过我其实不怎么会用git，都是csdn+chat，我好像只知道pull , commit -m , push 来着 ，hhhh。  
+感觉还挺好用的，以后配置文件也弄一份，这样很方便，很爽。。。  
 
-#### 软件架构
-软件架构说明
-
-
-#### 安装教程
-
-1.  xxxx
-2.  xxxx
-3.  xxxx
-
-#### 使用说明
-
-1.  xxxx
-2.  xxxx
-3.  xxxx
-
-#### 参与贡献
-
-1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
-3.  提交代码
-4.  新建 Pull Request
-
-
-#### 特技
-
-1.  使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2.  Gitee 官方博客 [blog.gitee.com](https://blog.gitee.com)
-3.  你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解 Gitee 上的优秀开源项目
-4.  [GVP](https://gitee.com/gvp) 全称是 Gitee 最有价值开源项目，是综合评定出的优秀开源项目
-5.  Gitee 官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6.  Gitee 封面人物是一档用来展示 Gitee 会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
+---
+这大概率是我算竞的最后一年了，希望能少留一点遗憾，希望能稍微不那么菜一些。  
