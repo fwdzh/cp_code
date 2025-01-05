@@ -70,37 +70,47 @@ void solve()
         y=p[y];
     }
     dbg(val);
-    vector<vi>dp(n+1,vi(2,n+1));
-    //dp[u][1]表示 以u为顶点的子树 且 u 为红色的 最小花费
+    vector<vi>dp(n+1,vi(4,n+1));
+    //不对不对 还需要一种状态
+    //这个子树没有满足条件 加上父节点才满足
+    //dp[u][0] 表示 子结点有红色
+    //dp[u][1] 表示 子结点有蓝色
+    //dp[u][2] 表示 子结点没有红色
+    //dp[u][3] 表示 子结点没有蓝色
     auto dfs=[&](auto &&self,int u,int pre)->void{
-        dbg(u);
-        if(sz(adj[u])==1){
-            dp[u][1]=val[u]^1;
-            dp[u][0]=val[u];
+        // dbg(u);
+        if(u!=1&&sz(adj[u])==1){
+            dp[u][2]=val[u]^1;
+            dp[u][3]=val[u];
             return;
         }
-        dbg(dp[u]);
-        ll sum0=0,sum1=0;
+        // dbg(dp[u]);
+        vl sum(4);
         for(auto v:adj[u]){
+            dbg(v);
             if(v==pre)  continue;
             self(self,v,u);
-            sum1+=dp[v][1];
-            sum0+=dp[v][0];
+            //如果这个点为0 他的其他儿子 如果为1 必须有为1的孩子
+            //
+            for(int i=0;i<4;i++)
+                sum[i]+=dp[v][i];
         }
         //dp[u][1] 需要 一个dp[v][1] 
         //dp[u][0] 
         for(auto v:adj[u]){
             if(v==pre) continue;
-            cmin(dp[u][1],dp[v][1]+sum0-dp[v][0]+(val[u]^1));
-            cmin(dp[u][0],dp[v][0]+sum1-dp[v][1]+val[u]);
+            cmin(dp[u][0],dp[v][2]+sum[1]-dp[v][1]+(val[u]^1));
+            cmin(dp[u][1],dp[v][3]+sum[0]-dp[v][0]+val[u]);
         }
+        cmin(dp[u][2],sum[1]+(val[u]^1));
+        cmin(dp[u][3],sum[0]+val[u]);
         dbg(u,dp[u]);
     };
     dfs(dfs,1,0);
     int ans=min(dp[1][0],dp[1][1]);
-    cout<<"-1\n";
-    return;
-    if(ans>n){
+    // cout<<"-1\n";
+    // return;
+    if(ans>n+1){
         cout<<"-1\n";
     }else {
         cout<<ans<<'\n';
