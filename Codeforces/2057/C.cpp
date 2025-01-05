@@ -1,6 +1,6 @@
 // Author: Zhangwuji
-// Date: 2025-01-04
-// Time: 22:52:30
+// Date: 2025-01-05
+// Time: 14:56:39
 
 // #define YUANSHEN
 #if defined(YUANSHEN)
@@ -37,43 +37,20 @@ constexpr ll LNF = 1000000000000000000LL;
 
 void solve()
 {
-    int l,r;
-    cin>>l>>r;
-    if(r-l==2){
-        cout<<l<<" "<<l+1<<" "<<r<<'\n';
-        return;
-    }
-    int m=0,x=(1<<30)-1;
-    int c=0;
-    for(int i=30;i>=0;i--){
-        int cur=1<<i;
-        if((r>>i&1)==(l>>i&1)){
-            if(r>>i&1){
-                if((m|(cur-1))>=l){
-                    continue;
-                }
-                m|=cur;
-            }else{
-                if((m|cur)<=r){
-                    m|=cur;
-                }
-            }
+    int l, r;
+    cin >> l >> r;
+    int x = 0;
+    for (int i = 29; i >= 0; i--) {
+        if (r >> i & 1)
+            x |= 1 << i;
+        if ((l >> i & 1) != (r >> i & 1)) {
+            break;
         }
     }
-    ll ans=(l^m)+(l^r)+(m^r);
-    if(l==m){
-        auto calc=[&](int x){
-            if(x>=r||x<=l) return 0;
-            return (x^l)+(x^r)+(l^r);
-        };
-        for(int i=0;i<30;i++){
-            if(calc(l^(1<<i))){
-                cout<<l<<" "<<(l^(1<<i))<<" "<<r<<'\n';
-                    return;
-                }
-        }
-    }
-    cout<<l<<" "<<m<<" "<<r<<'\n';
+    if (x == r)
+        cout << x << " " << x - 1 << " " << x - 2 << '\n';
+    else
+        cout << x << " " << x - 1 << " " << x + 1 << '\n';
 }
 
 int main()
@@ -83,9 +60,6 @@ int main()
     cin.tie(0);
     cout.tie(0);
 #endif
-// cerr<<(6^9)+(6^22)+(9^22)<<'\n';
-//     // 7 16 11
-//     cerr<<(7^11)+(7^16)+(16^11)<<'\n';
     int T = 1;
     cin >> T;
     while (T--)
