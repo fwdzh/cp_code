@@ -8,6 +8,8 @@
 *.out
 *.cph
 
+*.class
+
 # 忽略 Makefile 生成的文件
 Makefile
 Makefile.in
