@@ -1,10 +1,10 @@
 // Author: Zhangwuji
-// Date: 2025-01-21
-// Time: 14:21:05
+// Date: 2025-01-22
+// Time: 18:42:36
 
 // #define YUANSHEN
 #if defined(YUANSHEN)
-#include "D:/cp/template/debug.hpp"
+#include "C:/cp_code/template/debug.hpp"
 #else
 #include <bits/stdc++.h>
 using namespace std;
@@ -35,31 +35,34 @@ using pll = pair<ll, ll>;
 constexpr int INF = 1000000000;
 constexpr ll LNF = 1000000000000000000LL;
 
+const int N = 2e6 + 5;
+
 void solve()
 {
     int n;
     cin >> n;
-    vi l(n + 1), r(n + 1);
+    vi a(n + 1);
     for (int i = 1; i <= n; i++)
-        cin >> l[i] >> r[i];
-    vector<vector<pii>>v(n+1,vector<pii>());
-    for(int i=1;i<=n;i++){
-        v[l[i]].push_back({r[i],i});
-    }
-    set<pii>st;
-    vector<int>ans(n+1);
-    for(int i=1;i<=n;i++){
-        for(auto [x,y]:v[i])
-            st.insert({x,y});
-        if(st.empty()||st.begin()->first<i){
-            cout<<"-1\n";
-            return;
+        cin >> a[i];
+    // map<int,int>mp;
+    vector<int> mp(N);
+    auto work = [&](int x) {
+        for (int i = 1; i * i <= x; i++) {
+            if (x % i == 0) {
+                if (gcd(x, x ^ i) == i)
+                    mp[x ^ i]++;
+                int j = x / i;
+                if (i != j && gcd(x, x ^ j) == j)
+                    mp[j ^ x]++;
+            }
         }
-        ans[st.begin()->second]=i;
-        st.erase(st.begin());
+    };
+    ll ans = 0;
+    for (int i = 1; i <= n; i++) {
+        ans += mp[a[i]];
+        work(a[i]);
     }
-    for(int i=1;i<=n;i++)
-        cout<<ans[i]<<" ";
+    cout << ans << '\n';
 }
 
 int main()

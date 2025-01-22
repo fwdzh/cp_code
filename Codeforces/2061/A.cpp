@@ -1,6 +1,8 @@
+//奇数+奇数 得一分
+//是看有几个奇数
 // Author: Zhangwuji
-// Date: 2025-01-21
-// Time: 14:21:05
+// Date: 2025-01-20
+// Time: 22:36:59
 
 // #define YUANSHEN
 #if defined(YUANSHEN)
@@ -38,28 +40,16 @@ constexpr ll LNF = 1000000000000000000LL;
 void solve()
 {
     int n;
-    cin >> n;
-    vi l(n + 1), r(n + 1);
-    for (int i = 1; i <= n; i++)
-        cin >> l[i] >> r[i];
-    vector<vector<pii>>v(n+1,vector<pii>());
+    cin>>n;
+    int cnt=0;
     for(int i=1;i<=n;i++){
-        v[l[i]].push_back({r[i],i});
+        int x;
+        cin>>x;
+        cnt+=x&1;
     }
-    set<pii>st;
-    vector<int>ans(n+1);
-    for(int i=1;i<=n;i++){
-        for(auto [x,y]:v[i])
-            st.insert({x,y});
-        if(st.empty()||st.begin()->first<i){
-            cout<<"-1\n";
-            return;
-        }
-        ans[st.begin()->second]=i;
-        st.erase(st.begin());
-    }
-    for(int i=1;i<=n;i++)
-        cout<<ans[i]<<" ";
+    if(cnt!=n) cnt++;
+    else cnt--;
+    cout<<cnt<<'\n';
 }
 
 int main()
@@ -70,7 +60,7 @@ int main()
     cout.tie(0);
 #endif
     int T = 1;
-    // cin >> T;
+    cin >> T;
     while (T--)
         solve();
     return 0;

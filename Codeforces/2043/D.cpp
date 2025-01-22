@@ -1,6 +1,6 @@
 // Author: Zhangwuji
-// Date: 2025-01-21
-// Time: 14:21:05
+// Date: 2025-01-18
+// Time: 22:18:24
 
 // #define YUANSHEN
 #if defined(YUANSHEN)
@@ -37,29 +37,26 @@ constexpr ll LNF = 1000000000000000000LL;
 
 void solve()
 {
-    int n;
-    cin >> n;
-    vi l(n + 1), r(n + 1);
-    for (int i = 1; i <= n; i++)
-        cin >> l[i] >> r[i];
-    vector<vector<pii>>v(n+1,vector<pii>());
-    for(int i=1;i<=n;i++){
-        v[l[i]].push_back({r[i],i});
+    ll l,r,G;
+    cin>>l>>r>>G;
+    ll tl=((l-1)/G+1)*G,tr=r/G*G;
+    if(tl>r||tr<l){
+        cout<<"-1 -1\n";
+        return;
     }
-    set<pii>st;
-    vector<int>ans(n+1);
-    for(int i=1;i<=n;i++){
-        for(auto [x,y]:v[i])
-            st.insert({x,y});
-        if(st.empty()||st.begin()->first<i){
-            cout<<"-1\n";
-            return;
+    l=tl,r=tr;
+    for(ll d=(r-l)/G;d>=1;d--){
+        for(ll L=l/G;L+d<=r/G;L++){
+            if(gcd(L,L+d)==1){
+                cout<<L*G<<" "<<(L+d)*G<<'\n';
+                return;
+            }
         }
-        ans[st.begin()->second]=i;
-        st.erase(st.begin());
     }
-    for(int i=1;i<=n;i++)
-        cout<<ans[i]<<" ";
+    if(l==G)
+        cout<<G<<" "<<G<<'\n';
+    else
+        cout<<"-1 -1\n";
 }
 
 int main()
@@ -70,8 +67,10 @@ int main()
     cout.tie(0);
 #endif
     int T = 1;
-    // cin >> T;
+    cin >> T;
     while (T--)
         solve();
     return 0;
 }
+//238229212805620617 
+//204196468119103386

@@ -2,9 +2,9 @@
 // Date: 2025-01-21
 // Time: 13:24:13
 
-// #define YUANSHEN
+#define YUANSHEN
 #if defined(YUANSHEN)
-#include "D:/cp/template/debug.hpp"
+#include "C:/cp_code/template/debug.hpp"
 #else
 #include <bits/stdc++.h>
 using namespace std;

@@ -1,6 +1,6 @@
 // Author: Zhangwuji
-// Date: 2025-01-21
-// Time: 14:21:05
+// Date: 2025-01-20
+// Time: 22:53:56
 
 // #define YUANSHEN
 #if defined(YUANSHEN)
@@ -35,31 +35,30 @@ using pll = pair<ll, ll>;
 constexpr int INF = 1000000000;
 constexpr ll LNF = 1000000000000000000LL;
 
+constexpr int mod = 998244353;
 void solve()
 {
     int n;
     cin >> n;
-    vi l(n + 1), r(n + 1);
+    vi a(n + 1);
     for (int i = 1; i <= n; i++)
-        cin >> l[i] >> r[i];
-    vector<vector<pii>>v(n+1,vector<pii>());
-    for(int i=1;i<=n;i++){
-        v[l[i]].push_back({r[i],i});
+        cin >> a[i];
+    vector<vl> dp(n + 1, vl(2));
+    dp[0] = { 0, 1 }; // 0是骗子 1不是
+    vector<vl> cnt(n + 1, vl(2));
+    cnt[0] = { 0, 0 };
+    for (int i = 1; i <= n; i++) {
+        dp[i][0] = dp[i - 1][1];
+        cnt[i][0] = a[i - 1] + 1;
+        if (cnt[i - 1][0] == a[i])
+            dp[i][1] = dp[i - 1][0];
+        if (cnt[i - 1][1] == a[i])
+            dp[i][1] = (dp[i][1] + dp[i - 1][1]) % mod;
+        cnt[i][1] = a[i];
     }
-    set<pii>st;
-    vector<int>ans(n+1);
-    for(int i=1;i<=n;i++){
-        for(auto [x,y]:v[i])
-            st.insert({x,y});
-        if(st.empty()||st.begin()->first<i){
-            cout<<"-1\n";
-            return;
-        }
-        ans[st.begin()->second]=i;
-        st.erase(st.begin());
-    }
-    for(int i=1;i<=n;i++)
-        cout<<ans[i]<<" ";
+    cout << (dp[n][0] + dp[n][1]) % mod << '\n';
+    // cnt[i][0]表示前一个人说谎的话 当前骗子的数量
+    // cnt[i-1][1]表示
 }
 
 int main()
@@ -70,8 +69,13 @@ int main()
     cout.tie(0);
 #endif
     int T = 1;
-    // cin >> T;
+    cin >> T;
     while (T--)
         solve();
     return 0;
 }
+// 0 1
+// 11 10
+// 110 101
+// 1010 1011 1101
+// 10101x 10111 10110 11011 11010
