@@ -53,7 +53,6 @@ void solve()
     vector<vector<bool>> vis(n + 1, vector<bool>(m + 1));
     vector<pii> zeros;
     auto dfs = [&](auto&& self, int x, int y) -> void {
-        dbg(x,y);
         vis[x][y]=true;
         for (auto [p, q] : dir) {
             int nx = x + p, ny = y + q;
@@ -76,7 +75,6 @@ void solve()
             if (a[i][j] == 1 && !vis[i][j]) {
                 dfs(dfs, i, j);
                 cmin(ans,sz(zeros));
-                dbg(zeros);
                 while(!zeros.empty()){
                     auto [x,y]=zeros.back();
                     a[x][y]=0;

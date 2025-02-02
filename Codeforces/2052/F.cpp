@@ -1,8 +1,8 @@
 // Author: Zhangwuji
-// Date: 2025-01-23
-// Time: 14:10:44
+// Date: 2025-01-24
+// Time: 02:13:42
 
-#define YUANSHEN
+// #define YUANSHEN
 #if defined(YUANSHEN)
 #include "C:/cp_code/template/debug.hpp"
 #else
@@ -37,27 +37,33 @@ constexpr ll LNF = 1000000000000000000LL;
 
 void solve()
 {
-    int n,h,m;
-    cin>>n>>h>>m;
-    vector<set<string>>st(3);
-    for(int i=1;i<=n;i++){
-        string id;
-        int year,month,day;
-        char x;
-        string time;
-        cin>>id>>year>>x>>month>>x>>day>>time;
-        if(year!=h||month!=m)
-            continue;
-        if(time>="07:00:00"&&time<="09:00:00")
-            st[0].insert(id);
-        else if(time>="18:00:00"&&time<="20:00:00")
-            st[0].insert(id);
-        else if(time>="11:00:00"&&time<="13:00:00")
-            st[1].insert(id);
-        else if(time>="22:00:00"||time<="01:00:00")
-            st[2].insert(id);
+    int n;
+    cin >> n;
+    string s[2];
+    cin >> s[0] >> s[1];
+    bool multi=false;
+    for(int i=0;i<n;i++){
+        if(s[0][i]=='.'&&s[1][i]=='.'){
+            if(i+1<n&&s[0][i+1]=='.'&&s[1][i+1]=='.'){
+                multi=true;
+            }
+        }
+        else if(s[0][i]=='.'&&s[1][i]=='#'){
+            if(i+1==n||s[0][i+1]!='.'){
+                cout<<"None\n";
+                return;            
+            }
+            s[0][i+1]='#';
+        }else if(s[0][i]=='#'&&s[1][i]=='.'){
+            if(i+1==n||s[1][i+1]!='.'){
+                cout<<"None\n";
+                return;
+            }
+            s[1][i+1]='#';
+        }
     }
-    cout<<sz(st[0])<<" "<<sz(st[1])<<" "<<sz(st[2])<<'\n';
+    if(multi) cout<<"Multiple\n";
+    else cout<<"Unique\n";
 }
 
 int main()
@@ -68,7 +74,7 @@ int main()
     cout.tie(0);
 #endif
     int T = 1;
-    // cin >> T;
+    cin >> T;
     while (T--)
         solve();
     return 0;

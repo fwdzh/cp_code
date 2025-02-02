@@ -1,8 +1,8 @@
 // Author: Zhangwuji
-// Date: 2025-01-23
-// Time: 14:10:44
+// Date: 2025-02-02
+// Time: 13:33:13
 
-#define YUANSHEN
+// #define YUANSHEN
 #if defined(YUANSHEN)
 #include "C:/cp_code/template/debug.hpp"
 #else
@@ -37,27 +37,25 @@ constexpr ll LNF = 1000000000000000000LL;
 
 void solve()
 {
-    int n,h,m;
-    cin>>n>>h>>m;
-    vector<set<string>>st(3);
+    int n,m,k;
+    cin>>n>>m>>k;
+    vector<pii>a(n+1);
     for(int i=1;i<=n;i++){
-        string id;
-        int year,month,day;
-        char x;
-        string time;
-        cin>>id>>year>>x>>month>>x>>day>>time;
-        if(year!=h||month!=m)
-            continue;
-        if(time>="07:00:00"&&time<="09:00:00")
-            st[0].insert(id);
-        else if(time>="18:00:00"&&time<="20:00:00")
-            st[0].insert(id);
-        else if(time>="11:00:00"&&time<="13:00:00")
-            st[1].insert(id);
-        else if(time>="22:00:00"||time<="01:00:00")
-            st[2].insert(id);
+        cin>>a[i].fi;
+        a[i].se=i;
     }
-    cout<<sz(st[0])<<" "<<sz(st[1])<<" "<<sz(st[2])<<'\n';
+    sort(ALL(a),greater<>());
+    vector<int>idx(m*k+1);
+    ll sum=0;
+    for(int i=1;i<=m*k;i++){
+        idx[i]=a[i].se;
+        sum+=a[i].fi;
+    }
+    sort(ALL(idx));
+    cout<<sum<<'\n';
+    for(int i=1;i<k;i++)
+        cout<<idx[i*m]<<" ";
+    cout<<'\n';
 }
 
 int main()

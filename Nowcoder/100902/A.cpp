@@ -1,8 +1,8 @@
 // Author: Zhangwuji
-// Date: 2025-01-23
-// Time: 14:10:44
+// Date: 2025-02-02
+// Time: 19:00:52
 
-#define YUANSHEN
+// #define YUANSHEN
 #if defined(YUANSHEN)
 #include "C:/cp_code/template/debug.hpp"
 #else
@@ -37,27 +37,12 @@ constexpr ll LNF = 1000000000000000000LL;
 
 void solve()
 {
-    int n,h,m;
-    cin>>n>>h>>m;
-    vector<set<string>>st(3);
-    for(int i=1;i<=n;i++){
-        string id;
-        int year,month,day;
-        char x;
-        string time;
-        cin>>id>>year>>x>>month>>x>>day>>time;
-        if(year!=h||month!=m)
-            continue;
-        if(time>="07:00:00"&&time<="09:00:00")
-            st[0].insert(id);
-        else if(time>="18:00:00"&&time<="20:00:00")
-            st[0].insert(id);
-        else if(time>="11:00:00"&&time<="13:00:00")
-            st[1].insert(id);
-        else if(time>="22:00:00"||time<="01:00:00")
-            st[2].insert(id);
-    }
-    cout<<sz(st[0])<<" "<<sz(st[1])<<" "<<sz(st[2])<<'\n';
+    int x;
+    cin>>x;
+    if(x==1)
+        cout<<"-1\n";
+    else
+        cout<<2*x<<'\n';
 }
 
 int main()

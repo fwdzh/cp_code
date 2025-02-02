@@ -41,29 +41,17 @@ void solve()
 {
     int n,m;
     cin>>n>>m;
-    //abcdefghijk... z
-    //abz ....z 另外一边也得大于等于这个数字
-    //也就是说 你需要值小1 右边有一个
-    //4 2？
-    // bzbz
-    //len-1 z len z
     if(n-m>26||n==m){
         cout<<"NO\n";
         return;
     }
+    cout<<"YES\n";
     int len=n-m;
-    //abcdefg ... z abcd
-
-    //az abz
-    string s;
-    for(int i=0;i<len-1;i++)
-        s+=char('a'+0);
-    s+='z';
-    string ans=s;
-    while(sz(ans+s)<n){
-        ans+='z';
-    }
-    cout<<ans+s<<'\n';
+    string s(n,' ');
+    for(int i=0;i<n;i++)
+        s[i]='a'+(i%26);
+    s[n-len-1]=s[n-1];
+    cout<<s<<'\n';
 }
 
 int main()

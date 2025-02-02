@@ -1,8 +1,8 @@
 // Author: Zhangwuji
-// Date: 2025-01-23
-// Time: 14:10:44
+// Date: 2025-01-27
+// Time: 23:16:31
 
-#define YUANSHEN
+// #define YUANSHEN
 #if defined(YUANSHEN)
 #include "C:/cp_code/template/debug.hpp"
 #else
@@ -37,27 +37,33 @@ constexpr ll LNF = 1000000000000000000LL;
 
 void solve()
 {
-    int n,h,m;
-    cin>>n>>h>>m;
-    vector<set<string>>st(3);
-    for(int i=1;i<=n;i++){
-        string id;
-        int year,month,day;
-        char x;
-        string time;
-        cin>>id>>year>>x>>month>>x>>day>>time;
-        if(year!=h||month!=m)
+    int n,m;
+    cin>>n>>m;
+    vi a(n);
+    for(int i=0;i<n;i++)
+        cin>>a[i];
+    sort(all(a),greater<>());
+    int now=1;
+    vector<int>ans;
+    while(m){
+        if(m<now){
+            break;
+        }
+        // cerr<<a.back();
+        if(!a.empty()&&now==a.back()){
+            a.pop_back();
+            
+            now++;
             continue;
-        if(time>="07:00:00"&&time<="09:00:00")
-            st[0].insert(id);
-        else if(time>="18:00:00"&&time<="20:00:00")
-            st[0].insert(id);
-        else if(time>="11:00:00"&&time<="13:00:00")
-            st[1].insert(id);
-        else if(time>="22:00:00"||time<="01:00:00")
-            st[2].insert(id);
+        }
+        ans.push_back(now);
+        m-=now;
+        now++;
     }
-    cout<<sz(st[0])<<" "<<sz(st[1])<<" "<<sz(st[2])<<'\n';
+    cout<<sz(ans)<<'\n';
+    for(auto x:ans)
+        cout<<x<<" ";
+    cout<<'\n';
 }
 
 int main()
