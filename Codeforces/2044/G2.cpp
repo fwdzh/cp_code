@@ -70,26 +70,30 @@ void solve()
     };
     topsort();
     int ans = 0;
-    vi cnt(n+1),f(n+1);
+    vi cnt(n + 1), f(n + 1);
     for (int i = 1; i <= n; i++) {
         if (!t[i]) {
-            auto dfs = [&](auto&& self, int u) ->void{
-                if(!circle[u]){
-                    f[u]=u;
+            auto dfs = [&](auto&& self, int u) -> void {
+                if (f[u])
+                return;
+                if (!circle[r[u]]) {
+                    f[u] = u;
+                    cnt[u] = 1;
                     return;
                 }
-                if (f[u])
-                    return;
+
                 self(self, r[u]);
-                f[u]=f[r[u]];
+                f[u] = f[r[u]];
                 cnt[f[u]]++;
-                cmax(ans,cnt[f[u]]);
+                // cerr << u<<" "<<f[u] << " " << cnt[f[u]] << '\n';
+                // assert(f[u]&&(f[u]!=u)&&(!circle[f[u]]));
+                cmax(ans, cnt[f[u]]);
             };
             dfs(dfs, i);
         }
     }
-    cmax(ans,*max_element(ALL(cnt)));
-    cout<<ans+2<<'\n';
+    cmax(ans, *max_element(ALL(cnt)));
+    cout << ans + 2 << '\n';
 }
 
 int main()
