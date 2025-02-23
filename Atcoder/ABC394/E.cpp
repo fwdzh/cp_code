@@ -39,7 +39,7 @@ void solve()
 {
     int n;
     cin>>n;
-    vector<vi>a(n+1)
+    vector<vi>a(n+1);
 }
 
 int main()
