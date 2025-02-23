@@ -75,7 +75,7 @@ void solve()
         if (!t[i]) {
             auto dfs = [&](auto&& self, int u) -> void {
                 if (f[u])
-                return;
+                    return;
                 if (!circle[r[u]]) {
                     f[u] = u;
                     cnt[u] = 1;
