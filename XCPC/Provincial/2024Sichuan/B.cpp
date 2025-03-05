@@ -1,7 +1,7 @@
 // Date: 2025-03-02
 // Time: 15:05:00
 
-#include <bits/stdc++.h>
+#include<bits/stdc++.h>
 using namespace std;
 
 #define int long long

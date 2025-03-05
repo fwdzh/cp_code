@@ -1,0 +1,15 @@
+{
+  "configurations": [
+    {
+      "name": "Mingw64",
+      "includePath": [
+        //"C:\\usr\\bin\\gcc\\include", // MinGW 头文件路径
+        "C:\\usr\\bin\\gcc\\include\\c++\\14.2.0\\x86_64-w64-mingw32",
+        "C:\\usr\\bin\\gcc\\include\\c++\\14.2.0\\"
+      ],
+      "intelliSenseMode": "linux-gcc-x64", // 使用 gcc-x64 模式
+      "compilerPath": "C:\\usr\\bin\\gcc\\bin\\g++.exe", // MinGW 编译器路径
+      "defines": []
+    }
+  ]
+}
