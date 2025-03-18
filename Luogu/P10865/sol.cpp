@@ -31,7 +31,6 @@ void ChatGptDeepSeek()
                 assert(xx <= 3 && xx >= 0);
                 now_val ^= (xx << (2 * mp[{ nx, ny }]));
                 xx = max(0, xx - 1);
-
                 now_val |= (xx << (2 * mp[{ nx, ny }]));
             }
         }
@@ -45,8 +44,6 @@ void ChatGptDeepSeek()
             // for (int _ = 1; _ <= 3; _++)
             for (int j = now; j >= 0; j--) {
                 int nxt = calc(j, nx, ny);
-                // cerr << nxt << '\n';
-                // if(nxt==0) cout<<"qidong\n";
                 assert(nxt <= j);
                 dp[nxt] = min(dp[nxt], dp[j] + 1);
             }
