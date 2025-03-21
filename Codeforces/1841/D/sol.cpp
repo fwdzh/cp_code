@@ -10,6 +10,7 @@ dp[i]表示当前已经弄出来i个元素 且r最小
 // Time: 13:48:44
 
 #include <bits/stdc++.h>
+// #include "C:/usr/codes/cp/template/debug.hpp"
 using namespace std;
 
 void ChatGptDeepSeek()

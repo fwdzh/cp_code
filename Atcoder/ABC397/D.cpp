@@ -4,33 +4,40 @@
 #include <bits/stdc++.h>
 using namespace std;
 // using ll = unsigned long long;
-using ll = __int128;
-
-constexpr ll inf = 1e20;
+using ll = long long;
 
 void ChatGptDeepSeek()
 {
-    set<ll> st;
-    long long n;
+    ll n;
     cin >> n;
-    auto work = [&](ll x) {
-        for (int i = 1;; i++) {
-            if ((ll)i * i * i == x)
-                return i;
+    /*
+    (y+d)*(y+d)*(y+d)-y*y*y=n
+    (yyy+3dyy+3ddy+ddd)-yyy=n
+    3dyy+3ddy+ddd=n
+    3yy+3dy+dd=n/d
+    */
+    auto calc = [&](ll d) {
+        ll lo = 0, hi = 1e9 + 1;
+        while (lo < hi - 1) {
+            ll mid = (lo + hi) >> 1;
+            if (3 * mid * mid + 3 * mid * d + d * d <= n / d)
+                lo = mid;
+            else
+                hi = mid;
         }
+        // cerr << d << " " << hi << '\n';
+
+        if (3 * lo * lo + 3 * lo * d + d * d == n / d)
+            return lo;
+        return 0LL;
     };
-    for (int i = 1; i <= 5e6; i++) {
-        ll x = (ll)i * i * i;
-        // if (x > inf)
-        //     cerr << i << '\n';
-        if (!st.empty() && x - *st.rbegin() > n) {
-            // cerr << i << '\n';
-            break;
-        }
-        st.insert(x);
-        if (st.contains(x - n)) {
-            cout << i << " " << work(x - n) << '\n';
-            return;
+    for (ll d = 1; d * d * d <= n; d++) {
+        if (n % d == 0) {
+            ll res = calc(d);
+            if (res) {
+                cout << res + d << " " << res << '\n';
+                return;
+            }
         }
     }
     cout << "-1\n";
