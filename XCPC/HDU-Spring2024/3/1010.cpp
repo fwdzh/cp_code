@@ -11,19 +11,26 @@ void ChatGptDeepSeek()
     cin >> n >> m;
     vector<int> x(n), y(n);
     vector<int> a(4);
-    for (int i = 0; i < n; i++) {
+    a[1] = a[3] = 2e9;
+    a[0] = a[2] = -2e9;
+    for (int i = 0; i < n; i++)
+    {
         cin >> x[i] >> y[i];
+        a[0] = max(a[0], x[i] + y[i]);
+        a[1] = min(a[1], x[i] + y[i]);
+        a[2] = max(a[2], x[i] - y[i]);
+        a[3] = min(a[3], x[i] - y[i]);
     }
-    /*
-    在 [x,y] <= (a,b) 里
-    找到最小的 (x+y)
-
-    在 [x,y] >= (a,b) 里
-    找最大的 (x+y) 
-    
-    要同时两个坐标都在某个范围内
-    似乎很不好搞啊
-    */
+    long long ans = 4e9;
+    for (int i = 0; i < m; i++)
+    {
+        int X, Y;
+        cin >> X >> Y;
+        long long c = X + Y, d = X - Y;
+        long long now = max({c - a[1], a[0] - c, a[2] - d, d - a[3]});
+        ans = min(ans, now);
+    }
+    cout << ans << '\n';
 }
 
 int main()
