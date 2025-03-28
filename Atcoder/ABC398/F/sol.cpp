@@ -7,23 +7,35 @@ void ChatGptDeepSeek()
 {
     string s;
     cin >> s;
-    int len = s.size(), lst = -1;
-    for (int i = 0; i < len - i - 1 && i < s.size() && len - i - 1 < s.size(); i++)
-    {
-        if (s[i] != s[len - i - 1])
-        {
-            len += i - lst;
-            lst = i;
-        }
-    }
+    /*
+    怎么跟KMP结合呢？
+    我们实际上是去求最长的回文后缀
+    这个东西可以用KMP来求
+    ABCD#DCBA
+    */
     string t = s;
-    while (t.size() < len)
-        t += "a";
-    for (int i = 0; i < len - i - 1; i++)
+    int n = s.size();
+    s = s + "#" + s;
+    reverse(s.begin(), s.begin() + n);
+    vector<int> p(2 * n + 1);
+    // cerr<<s<<'\n';
+    for (int i = 1; i <= 2 * n; i++)
     {
-        if (t[i] != t[len - i - 1])
-            t[len - i - 1] = t[i];
+        int j = p[i - 1];
+        while (j > 0 && s[i] != s[j])
+            j = p[j - 1];
+        // cerr<<i<<" "<<j<<" "<<p[j]<<'\n';
+        p[i] = j;
+        if (s[i] == s[j])
+            p[i]++;
     }
+    n += n - *max_element(p.begin() + n + 1, p.end());
+    while (t.size() < n)
+        t.push_back('@');
+    for (int i = 0; i < n - i - 1; i++)
+        if (t[i] != t[n - i - 1])
+            t[n - i - 1] = t[i];
+    // GVGG#GGVG
     cout << t << '\n';
 }
 

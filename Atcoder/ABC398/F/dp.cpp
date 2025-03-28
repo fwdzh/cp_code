@@ -4,8 +4,8 @@ using namespace std;
 int main()
 {
     system("g++ -std=c++20 gen.cpp -o gen");
-    // system("g++ -std=c++20 sol.cpp -o sol");
-    // system("g++ -std=c++20 std.cpp -o std");
+    system("g++ -std=c++20 sol.cpp -o sol");
+    system("g++ -std=c++20 std.cpp -o std");
     int t = 10000;
     for (int i = 1; i <= t; i++) {
         system("gen > 1.in");
