@@ -8,23 +8,27 @@ void ChatGptDeepSeek()
 {
     ll k, b, c, v;
     cin >> k >> b >> c >> v;
-    // px^c <= v
-    // px <= v^c
-    // px = kx+b
-    ll lo = 0, hi = (c ^ v) + 1;
-    ll mx = (c ^ v) - b;
-    cerr << mx << '\n';
-    while (lo < hi - 1)
+    ll led = 0;
+    // p^c <=v
+    ll ans = 0;
+    for (int i = 60; i >= 0; i--)
     {
-        ll mid = (lo + hi) >> 1;
-        if (k * mid <= mx)
-            lo = mid;
-        else
-            hi = mid;
+        if (v >> i & 1)
+        {
+            ll u = (led ^ c) & ((1LL << 61) - (1LL << i));
+            ll L = u - 1, R = u + (1LL << i) - 1;
+            // [u,R] 是 i全为0的区间，在这之后 i 这个地方全会为1了
+            // 那么我们后面其实会漏掉 p=v 的情况
+            if (R >= b)
+                ans += (R - b) / k + 1;
+            if (L >= b)
+                ans -= (L - b) / k + 1;
+            led |= 1LL << i;
+        }
     }
-    if (b <= (c ^ v))
-        lo++;
-    cout << lo << '\n';
+    if ((v ^ c) >= b && ((v ^ c) - b) % k == 0)
+        ans++;
+    cout << ans << '\n';
 }
 
 int main()
