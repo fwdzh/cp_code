@@ -1,18 +1,6 @@
-/*
-5 10
-7 79 1 7 1
-
-1 7 79
-
-x y
-gcd(x+k,y+k)=y+k
-gcd(x-y,y+k)=y+k
-
-*/
 // Date: 2025-03-29
 // Time: 17:04:03
 #include <bits/stdc++.h>
-#define int long long
 using namespace std;
 
 void ChatGptDeepSeek()
@@ -20,103 +8,87 @@ void ChatGptDeepSeek()
     int n, k;
     cin >> n >> k;
     vector<int> a(n + 1);
+    int g = 0, mn = 1e9;
     for (int i = 1; i <= n; i++)
     {
         cin >> a[i];
+        mn = min(mn, a[i]);
     }
-    if (n == 1 || (*max_element(a.begin() + 1, a.end()) == *min_element(a.begin() + 1, a.end())))
+    for (int i = 2; i <= n; i++)
+        g = __gcd(g, abs(a[i] - a[i - 1]));
+    // cerr << g << '\n';
+    if (!g)
     {
-        cout << k << " " << 1LL * (1 + k) * k / 2 << '\n';
+        cout << k << " " << 1LL * k * (k + 1) / 2 << '\n';
         return;
     }
-
-    set<int> st;
+    vector<int> b(n + 1), l(n + 1), r(n + 1), d;
+    for (int i = 1; i * i <= g; i++)
     {
-        for (int i = 2; i <= n; i++)
+        if (g % i == 0)
         {
-            int x = a[i], y = a[i - 1];
-            if (x == y)
-                continue;
-            if (x < y)
-                swap(x, y);
-            int z = x - y;
-            // cerr<<"x y : "<<x<<" "<<y<<'\n';
-            for (int j = 1; j * j <= z; j++)
+            int dd = i - mn;
+            if (dd >= 1 && dd <= k)
+                d.push_back(dd);
+            if (i * i != g)
             {
-                if (z % j == 0)
-                {
-                    int KK = j - y;
-                    if (KK > 0 && KK <= k)
-                        st.insert(KK);
-                    int l = z / j;
-                    KK = l - y;
-                    if (KK > 0 && KK <= k)
-                        st.insert(KK);
-                }
-            }
-            break;
-        }
-    }
-    int g = 0;
-    for (int i = 2; i <= n; i++)
-    {
-        int x = a[i - 1], y = a[i];
-
-        if (x == y)
-            continue;
-        if (x < y)
-            swap(x, y);
-        g = __gcd(g, x - y);
-        int z = x - y;
-        if (z <= y)
-        {
-            cout << "0 0\n";
-            return;
-        }
-        set<int> st1;
-        for (int j = 1; j * j <= z; j++)
-        {
-            if (z % j == 0)
-            {
-                int KK = j - y;
-                if (KK > 0 && KK <= k && st.count(KK))
-                    st1.insert(KK);
-                int l = z / j;
-                KK = l - y;
-                if (KK > 0 && KK <= k && st.count(KK))
-                    st1.insert(KK);
+                dd = g / i - mn;
+                if (dd >= 1 && dd <= k)
+                    d.push_back(dd);
             }
         }
-        // for (auto it : st1)
-        //     cerr << it << ' ';
-        // cerr << '\n';
-        st = st1;
     }
-    // cout << st.size() << ' ';
-    int cnt = 0;
+    int ans = 0;
     long long sum = 0;
-    for (auto x : st)
+
+    auto build = [&]()
     {
-        // cerr << x << " ";
-        if (x % g)
+        vector<int> stk;
+        for (int i = 1; i <= n; i++)
         {
-            continue;
+            while (!stk.empty() && b[stk.back()] > b[i])
+                l[i] = stk.back(), stk.pop_back();
+            if (!stk.empty())
+                r[stk.back()] = i;
+            stk.push_back(i);
         }
-        cnt++;
-        sum += x;
+        mn = stk[0];
+    };
+    auto dfs = [&](auto &&self, int i) -> bool
+    {
+        if (l[i])
+        {
+            if (b[l[i]] % b[i])
+                return false;
+            if (!self(self, l[i]))
+                return false;
+        }
+        if (r[i])
+        {
+            if (b[r[i]] % b[i])
+                return false;
+            if (!self(self, r[i]))
+                return false;
+        }
+        return true;
+    };
+    auto check = [&](int x)
+    {
+        for (int i = 1; i <= n; i++)
+            b[i] = a[i] + x, l[i] = r[i] = 0;
+        build();
+        return dfs(dfs, mn);
+    };
+
+    for (auto x : d)
+    {
+        // cerr << x << "\n";
+        if (check(x))
+            ans++, sum += x;
     }
-    // cerr << '\n';
-    cerr << g << '\n';
-    // assert(cnt == st.size());
-    cout << cnt << '\n';
-    cout << sum << '\n';
+    cout << ans << " " << sum << '\n';
 }
-/*
-11 11 1 1 1 13 11 13
-10 5 2
-12 6 2
-*/
-signed main()
+int main()
 {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
