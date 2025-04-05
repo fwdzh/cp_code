@@ -24,37 +24,15 @@ void ChatGptDeepSeek()
     {
         return ask(r) - ask(l - 1);
     };
-    auto Find = [&](int i)
-    {
-        ll lo = i - 1, hi = 1LL * n * k + 1;
-        while (lo < hi - 1)
-        {
-            ll mid = (lo + hi) >> 1;
-            if (calc(i, mid) < x)
-                lo = mid;
-            else
-                hi = mid;
-        }
-        if (calc(i, hi) < x || hi > 1LL * n * k)
-            return -1LL;
-        return hi;
-    };
-    ll ans = 0;
-    for (int i = 1; i <= n; i++)
-    {
-        // hi hi+n hi+2n hi+3n
-        // (n*k-hi)/n+1
-        // [r,n] [r+n,n] []
-        // [n-r+1] -n -2n -3n
-        auto r = Find(i);
-        if (r == -1)
-            continue;
-        // cerr << r << '\n';
-        ll X = (1LL * n * k - r) / n;
-        ans += X + 1;
-        // ans -= X * n;
+    
+    ll lo=0,hi=1LL*n*k+1;
+    while(lo<hi-1){
+        ll mid=(lo+hi)>>1;
+        if(calc(mid,1LL*n*k)>=x)
+            lo=mid;
+        else hi=mid;
     }
-    cout << ans << '\n';
+    cout<<lo<<'\n';
 }
 
 int main()
