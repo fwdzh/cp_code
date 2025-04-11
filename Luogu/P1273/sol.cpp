@@ -47,30 +47,52 @@ void ChatGptDeepSeek() // Date: 2025-04-11
             adj[i].push_back({v, w});
         }
     }
-    vector<vi> dp(n + 1, vi(n * 10 * 2 + 10));
-    vi cost(n + 1);
+
+    vector<vi> dp(n + 1, vi(m + 1, -INF));
+    for (int i = 1; i <= n; i++)
+        dp[i][0] = 0;
     for (int i = n - m + 1; i <= n; i++)
-        cin >> cost[i], dp[i][cost[i]] = 1;
+    {
+        int x;
+        cin >> x;
+        dp[i][1] = x;
+    }
+    vector<vi> ndp(dp);
+
     auto dfs = [&](auto &&self, int u, int pre) -> void
     {
+        // cerr << u << '\n';
+        ndp[u] = dp[u];
         for (auto [v, w] : adj[u])
         {
             if (v == pre)
                 continue;
             self(self, v, u);
-            for (int i = 10 * n; i >= -10 * n; i--)
+            // 知道子结点的cost情况 能怎么样呢？
+            // 改一下 dp[i,j]表示节点i 有j 的贡献 的最小的cost
+            for (int i = 0; i <= m; i++)
             {
-                if (i - w + 10 * n >= 0)
-                    cmax(dp[u][i + 10 * n], dp[u][i + 10 * n - w] + dp[v][i - w + 10 * n]);
+                if (dp[u][i] == -INF)
+                    break;
+                for (int j = 0; j + i <= m; j++)
+                {
+                    if (dp[v][j] == -INF)
+                        break;
+                    ndp[u][i + j] = max(ndp[u][i + j], dp[u][i] + dp[v][j] - w);
+                }
             }
-        }
-        for (int i = -10 * n + 1; i <= 10 * n; i++)
-        {
-            cmax(dp[u][i + 10 * n], dp[u][i - 1 + 10 * n]);
+            dp[u] = ndp[u];
         }
     };
     dfs(dfs, 1, 0);
-    cout << dp[1][10 * n] << '\n';
+    for (int i = m; i >= 0; i--)
+    {
+        if (dp[1][i] >= 0)
+        {
+            cout << i << '\n';
+            return;
+        }
+    }
 }
 
 int main()
