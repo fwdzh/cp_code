@@ -27,9 +27,7 @@ void ChatGptDeepSeek() // Date: 2025-04-13
             if (a[i] > 0)
             {
                 ll need = (H - b[i]) / a[i] + ((H - b[i]) % a[i] != 0);
-                // cerr << i << " " << need << " ";
                 int idx = lower_bound(c.begin() + 1, c.end(), need) - c.begin();
-                // cerr << i << " " << need << " " << idx << " \n";
                 if (idx <= n)
                 {
                     s[idx]++;
@@ -39,12 +37,19 @@ void ChatGptDeepSeek() // Date: 2025-04-13
             else if (a[i] == 0)
             {
                 if (b[i] >= H)
-                    M++;
+                {
+                    // s[1]++;
+                    p[n]++;
+                    // M++;
+                }
             }
             else
             {
-                ll need = (H - b[i]) / a[i] - ((H - b[i]) % a[i] != 0);
-
+                ll need = (H - b[i]) / a[i] - ((H - b[i]) % (-a[i]) != 0);
+                // ll need = (H - b[i]) / a[i];
+                //ax+b>=H
+                //x<=(H-b)/a
+                //所以减1 没问题阿
                 int idx = upper_bound(c.begin() + 1, c.end(), need) - c.begin() - 1;
 
                 // cerr << i << " " << need << " " << idx << " \n";
@@ -58,77 +63,102 @@ void ChatGptDeepSeek() // Date: 2025-04-13
             }
         }
         // for (int i = 1; i <= n; i++)
-        // {
         //     cerr << p[i] << " \n"[i == n];
-        // }
         // for (int i = 1; i <= n; i++)
-        // {
         //     cerr << s[i] << " \n"[i == n];
-        // }
-        // cerr << M << '\n';
-        // for (int i = n - 1; i >= 1; i--)
-        // {
-        //     p[i] += p[i + 1];
-        //     p[i] = min(p[i], i);
-        // }
+        // 1 0 1 0
         for (int i = 1; i <= n; i++)
-        {
-            s[i] = min(s[i], n - i + 1);
-        }
-
-        for (int i = n - 1; i >= 1; i--)
-            s[i] += s[i + 1];
-        for (int i = 1; i < n; i++)
-            s[i + 1] = max(s[i + 1], s[i]);
-        for (int i = 1; i <= n; i++)
-        {
-            s[i] = min(s[i], n - i + 1);
-        }
-        for (int i = 1; i <= n; i++)
-        {
             p[i] = min(p[i], i);
-        }
+        for (int i = 1; i <= n; i++)
+            s[i] = min(s[i], n - i + 1);
+        vector<int> p1 = p, s1 = s;
+
+        // for (int i = 1; i <= n; i++)
+        //     p[i] += p[i - 1];
         for (int i = n - 1; i >= 1; i--)
             p[i] += p[i + 1];
+        for (int i = 1; i <= n; i++)
+            p[i] = min(p[i], i);
+
+        for (int i = 1; i <= n; i++)
+            s[i] += s[i - 1];
+        // for (int i = n - 1; i >= 1; i--)
+        //     s[i] += s[i + 1];
+        for (int i = 1; i <= n; i++)
+            s[i] = min(s[i], n - i + 1);
+
         for (int i = n - 1; i >= 1; i--)
-            p[i] = max(p[i], p[i + 1]);
+        {
+            // s1[i] += s1[i + 1];
+            s1[i] = s1[i + 1] + min(n - i + 1 - s1[i + 1], s1[i]);
+        }
         for (int i = 1; i <= n; i++)
         {
-            // p[i] = max(p[i], p[i + 1]);
-            p[i] = min(p[i], i);
+            // p1[i] += p1[i - 1];
+            p1[i] = p1[i - 1] + min(i - p1[i - 1], p1[i]);
         }
 
+        for (int i = 1; i <= n; i++)
+        {
+            s1[i] = min(s1[i], n - i + 1);
+            p1[i] = min(p1[i], i);
+        }
+        for (int i = 1; i <= n; i++)
+            p[i] += p1[i - 1];
+        for (int i = 1; i < n; i++)
+            s[i] += s1[i + 1];
+
+        for (int i = 1; i <= n; i++)
+        {
+            // p[i - 1] = max(p[i - 1], p[i]);
+            p[i] = min(p[i], i);
+            s[i] = min(s[i], n - i + 1);
+        }
+        for (int i = n - 1; i >= 1; i--)
+        {
+            // s[i + 1] = max(s[i], s[i + 1]);
+            s[i] = min(s[i], n - i + 1);
+        }
+        for (int i = 1; i <= n; i++)
+        {
+            // p[i - 1] = max(p[i - 1], p[i]);
+            p[i] = min(p[i], i);
+            s[i] = min(s[i], n - i + 1);
+        }
         // for (int i = 1; i <= n; i++)
-        // {
         //     cerr << p[i] << " \n"[i == n];
-        // }
         // for (int i = 1; i <= n; i++)
-        // {
         //     cerr << s[i] << " \n"[i == n];
-        // }
-        // cerr << M << '\n';
-        if (p[n] + M >= (n + 1) / 2 || s[1] + M >= (n + 1) / 2)
+        if (p[n] >= (n + 1) / 2 || s[1] >= (n + 1) / 2)
             return true;
 
         for (int i = 1; i + 1 <= n; i++)
         {
-            if (M + p[i] + s[i + 1] >= (n + 1) / 2)
+            if (p[i] + s[i + 1] >= (n + 1) / 2)
                 return true;
         }
         return false;
     };
-    ll lo = -3e18, hi = 3e18;
-    while (lo < hi - 1)
+    ll lo = -2e18, hi = 2e18, ans = 0;
+    while (lo <= hi)
     {
-        ll mi = (lo + hi) / 2;
-        if (check(mi))
-            lo = mi;
+        // ll mi = (lo + hi) / 2;
+        // if (check(mi))
+        //     lo = mi;
+        // else
+        //     hi = mi;
+        ll mid = (lo + hi) / 2;
+        if (check(mid))
+            lo = mid + 1, ans = mid;
         else
-            hi = mi;
+            hi = mid - 1;
     }
-    cout << lo << '\n';
-    assert(check(lo + 1) == false);
-    assert(lo != -4e18);
+    cout << ans << '\n';
+    // cout << lo << '\n';
+    // if(n==28308)
+    //     assert(check(999999997000000000));
+    // assert(check(lo + 1) == false);
+    // assert(lo != -4e18);
     // cerr << check(11) << '\n';
     // cerr << check(25) << '\n';
     // cout << check(9) << '\n';
@@ -152,6 +182,8 @@ signed main()
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
+    // cerr<<(-3/-2)<<'\n';
+    // cerr<<(-2%2)<<'\n';
     int T = 1;
     cin >> T;
     while (T--)
