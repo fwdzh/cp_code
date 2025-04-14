@@ -31,42 +31,42 @@ using pll = pair<ll, ll>;
 constexpr int INF = 1000000000;
 constexpr ll LNF = 1000000000000000000LL;
 
-void ChatGptDeepSeek() // Date: 2025-04-14
-{                      // Time: 17:50:21
-    int n;
-    // 10101
-    cin >> n;
-    string s;
-    cin >> s;
-    if (s[n - 1] == '0' && s[n - 2] == '0')
+constexpr int mod = int(1e9) + 7;
+ll ksm(ll a, ll b)
+{
+    ll res = 1;
+    while (b)
     {
-        cout << "Yes\n";
-        return;
+        if (b & 1)
+            res = res * a % mod;
+        a = a * a % mod;
+        b >>= 1;
     }
-    if (n == 3)
-    {
-        if (s[2] == '1' || s[1] == '1')
-            cout << "No\n";
-        else
-            cout << "Yes\n";
-        return;
-    }
-    if (s[n - 1] == '1' && s[n - 2] == '1')
-    {
-        if (s[n - 3] == '0' && s[n - 4] == '1')
-            cout << "Yes\n";
-        else
-            cout << "No\n";
-        return;
-    }
-    if (count(all(s), '1') >= 2)
-        cout << "Yes\n";
-    else
-        cout << "No\n";
-    // 110-> 010 ，前面有1就ok
-    // 101-> 110 , 前面若有1 1110-> 1010 ok
-    // 111->
+    return res;
 }
+void ChatGptDeepSeek() // Date: 2025-04-15
+{                      // Time: 00:14:11
+    int n;
+    cin >> n;
+    ll ans = 0, s = 0;
+    vector<int> a(n + 1);
+    for (int i = 1; i <= n; i++)
+        cin >> a[i];
+    s = 0;
+    for (int i = 1; i < n; i++)
+        s ^= a[i], ans = (ans + 2 * ksm(3, n - i - 1) * s % mod) % mod;
+    s^=a[n];
+    ans = (ans + s) % mod;
+    cout << ans << '\n';
+}
+/*
+后面有多少个符号 就要加3的多少次方
+a1+()
+a1-()
+
+a1^a2+()
+a1^a2-()
+*/
 
 int main()
 {
@@ -76,7 +76,7 @@ int main()
     cout.tie(0);
 #endif
     int T = 1;
-    cin >> T;
+    // cin >> T;
     while (T--)
         ChatGptDeepSeek();
     return 0;
