@@ -33,7 +33,9 @@ constexpr ll LNF = 1000000000000000000LL;
 
 void ChatGptDeepSeek() // Date: 2025-04-12
 {                      // Time: 17:53:59 
-    cout<<atan2(233,666)<<'\n';
+    double degree=atan2(666,233);
+    double r=sqrt(666*666+233*233);
+    cout<<r+degree*r<<'\n';
 }
 
 int main()
