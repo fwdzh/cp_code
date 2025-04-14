@@ -26,7 +26,15 @@ void ChatGptDeepSeek() // Date: 2025-04-13
         {
             if (a[i] > 0)
             {
-                ll need = (H - b[i]) / a[i] + ((H - b[i]) % a[i] != 0);
+                // ll need = (H - b[i]) / a[i] + ((H - b[i]) % a[i] != 0);
+                ll need = (H - b[i]) / a[i];
+                if ((H - b[i]) >= 0 && (H - b[i]) % a[i] != 0)
+                    need++;
+                // 大于等于3.5的话 大于等于4 没问题
+                // 大于等于-3.5的话 大于等于-3就行
+
+                // 小于等于0.5 要改
+                // 大于等于-0.5不用改
                 int idx = lower_bound(c.begin() + 1, c.end(), need) - c.begin();
                 if (idx <= n)
                 {
@@ -45,11 +53,19 @@ void ChatGptDeepSeek() // Date: 2025-04-13
             }
             else
             {
-                ll need = (H - b[i]) / a[i] - ((H - b[i]) % (-a[i]) != 0);
+                ll need = (H - b[i]) / a[i];
+                // if (need < 0 && (H - b[i]) % a[i] != 0)
+                //     need--;
                 // ll need = (H - b[i]) / a[i];
-                //ax+b>=H
-                //x<=(H-b)/a
-                //所以减1 没问题阿
+                // 小于等于3.5时 小于等于3就行
+                // 小于等于-3.5时，小于等-4
+                // ax+b>=H
+                // x<=(H-b)/a
+                // 所以减1 没问题阿
+
+                // 但可能是+0.5 也可能是-0.5
+                if (H - b[i] >= 0 && (H - b[i]) % a[i] != 0)
+                    need--;
                 int idx = upper_bound(c.begin() + 1, c.end(), need) - c.begin() - 1;
 
                 // cerr << i << " " << need << " " << idx << " \n";
@@ -139,22 +155,22 @@ void ChatGptDeepSeek() // Date: 2025-04-13
         }
         return false;
     };
-    ll lo = -2e18, hi = 2e18, ans = 0;
-    while (lo <= hi)
+    ll lo = ll(-2e18)-1, hi = ll(2e18)+1, ans = 0;
+    while (lo < hi - 1)
     {
-        // ll mi = (lo + hi) / 2;
-        // if (check(mi))
-        //     lo = mi;
-        // else
-        //     hi = mi;
-        ll mid = (lo + hi) / 2;
-        if (check(mid))
-            lo = mid + 1, ans = mid;
+        ll mi = (lo + hi) / 2;
+        if (check(mi))
+            lo = mi;
         else
-            hi = mid - 1;
+            hi = mi;
+        // ll mid = (lo + hi) / 2;
+        // if (check(mid))
+        //     lo = mid + 1, ans = mid;
+        // else
+        //     hi = mid - 1;
     }
-    cout << ans << '\n';
-    // cout << lo << '\n';
+    // cout << ans << '\n';
+    cout << lo << '\n';
     // if(n==28308)
     //     assert(check(999999997000000000));
     // assert(check(lo + 1) == false);
@@ -184,6 +200,7 @@ signed main()
     cout.tie(nullptr);
     // cerr<<(-3/-2)<<'\n';
     // cerr<<(-2%2)<<'\n';
+    // cerr << -1 / -2 << '\n';
     int T = 1;
     cin >> T;
     while (T--)
