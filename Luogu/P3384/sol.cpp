@@ -40,7 +40,6 @@ int mod, cntd = 0;
 
 void build(int p, int l, int r)
 {
-    // cerr<<p<<'\n';
     if (l == r)
     {
         tr[p]=a[seg[l]]%mod;
@@ -61,8 +60,6 @@ void push_down(int p,int l,int r)
 }
 void upd(int p,int l,int r,int lx,int rx,int val)
 {
-    assert(lx<=rx);
-    // cerr<<p<<'\n';
     if(l>=lx&&r<=rx){
         tr[p]=(tr[p]+1LL*(r-l+1)*val%mod)%mod;
         tag[p]=(tag[p]+val)%mod;
@@ -75,7 +72,6 @@ void upd(int p,int l,int r,int lx,int rx,int val)
 }
 int query(int p,int l,int r,int lx,int rx)
 {
-    // cerr<<p<<" "<<l<<" "<<r<<'\n';
     if(l>=lx&&r<=rx) return tr[p];
     push_down(p,l,r);
     int res=0;
@@ -130,9 +126,7 @@ void ChatGptDeepSeek() // Date: 2025-04-17
     dfs2(dfs2, r, 0);
     build(1,1,n);
     auto op1=[&](int x,int y,int z){
-        //x -> y , + z
         while(top[x]!=top[y]){
-            // cerr<<x<<" "<<y<<'\n';
             if(dep[top[x]]>=dep[top[y]]){
                 upd(1,1,n,dfn[top[x]],dfn[x],z);
                 x=fa[top[x]];
@@ -145,10 +139,8 @@ void ChatGptDeepSeek() // Date: 2025-04-17
         upd(1,1,n,dfn[x],dfn[y],z);
     };
     auto op2=[&](int x,int y){
-        //x -> y , + z
         int res=0;
         while(top[x]!=top[y]){
-            // cerr<<x<<" "<<y<<'\n';
             if(dep[top[x]]>=dep[top[y]]){
                 res=(res+query(1,1,n,dfn[top[x]],dfn[x]))%mod;
                 x=fa[top[x]];
