@@ -62,12 +62,10 @@ void update(int &now, int l, int r, int pos, int v)
 {
     if(!now) now = ++cnt;
     if(l == r){
-        // 到叶子节点了
         tr[now].cnt += v;
         tr[now].ans = l;
         return;
     }
-    // 递归处理
     if(pos <= mi) update(tr[now].l, l, mi, pos, v);
     else update(tr[now].r, mi + 1, r, pos, v);
     push_up(now);
