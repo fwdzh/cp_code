@@ -1,11 +1,14 @@
 // #define YUANSHEN
 #if defined(YUANSHEN)
-#include "C:/cp_code/template/debug.hpp"
+#include "/home/skadi/cp_code/template/debug.hpp"
 #else
 #include <bits/stdc++.h>
 using namespace std;
 #define dbg(...) 42
 #endif
+
+#define rep(N) for(int i = 1; i <= N; i++)
+
 template <typename T1, typename T2>
 void cmin(T1& x, const T2& y)
 {
@@ -31,45 +34,88 @@ using pll = pair<ll, ll>;
 constexpr int INF = 1000000000;
 constexpr ll LNF = 1000000000000000000LL;
 
-constexpr int N = int(1e5)+5;
-int siz[N],fa[N],dep[N],son[N],top[N],dfn[N],seg[N];
+constexpr int N = int(1e5) + 5;
+struct tree{
+    int l, r, cnt;
+    ll ans;
+    tree(int v = 0){
+        l = r = cnt = ans = v;
+    }
+};
+tree tr[N * 50];
+#define mi ((l + r) >> 1)
+#define lson tr[p].l
+#define rson tr[p].r
+int cnt = 0, rt[N];
 
-void ChatGptDeepSeek() // Date: 2025-04-21
-{                      // Time: 16:41:45 
+void push_up(int p)
+{
+    tr[p].cnt = max(tr[lson].cnt, tr[rson].cnt);
+    if(tr[lson].cnt > tr[rson].cnt)
+        tr[p].ans = tr[lson].ans;
+    else if(tr[lson].cnt < tr[rson].cnt)
+        tr[p].ans = tr[rson].ans;
+    else
+        tr[p].ans = tr[lson].ans + tr[rson].ans;
+}
+void update(int &now, int l, int r, int pos, int v)
+{
+    if(!now) now = ++cnt;
+    if(l == r){
+        // 到叶子节点了
+        tr[now].cnt += v;
+        tr[now].ans = l;
+        return;
+    }
+    // 递归处理
+    if(pos <= mi) update(tr[now].l, l, mi, pos, v);
+    else update(tr[now].r, mi + 1, r, pos, v);
+    push_up(now);
+}
+int merge(int a, int b, int l, int r)
+{
+    if(!a) return b;
+    if(!b) return a;
+    if(l == r){
+        tr[a].cnt += tr[b].cnt;
+        tr[a].ans = l;
+        return a;
+    }
+    tr[a].l = merge(tr[a].l, tr[b].l, l, mi);
+    tr[a].r = merge(tr[a].r, tr[b].r, mi + 1, r);
+    push_up(a);
+    return a;
+}
+void ChatGptDeepSeek() // Date: 2025-04-29
+{                      // Time: 23:52:50 
     int n;
-    cin>>n;
-    vector<vi>g(n+1,vi());
-    for(int i=1;i<n;i++){
-        int u,v;
-        cin>>u>>v;
+    cin >> n;
+    cnt = n;
+    vi c(n + 1);
+    vl ans(n + 1);
+    for(int i = 1; i <= n; i++){
+        cin >> c[i];
+        rt[i] = i;
+    }
+    vector<vi> g(n + 1, vi());
+    for(int i = 1; i < n; i++){
+        int u, v;
+        cin >> u >> v;
         g[u].push_back(v);
         g[v].push_back(u);
     }
-    auto dfs1=[&](auto &&self,int u,int pre)->void{
-        siz[u]=1,fa[u]=pre,dep[u]=dep[pre]+1;
-        for(auto v:g[u]){
-            if(v==pre) continue;
-            self(self,v,u);
-            siz[u]+=siz[v];
-            if(son[u]==0||siz[v]>siz[son[u]])
-                son[u]=v;
+    auto dfs = [&](auto &&self, int u, int pre) -> void{
+        for(auto v : g[u]){
+            if(v == pre) continue;
+            self(self, v, u);
+            rt[u] = merge(rt[u], rt[v], 1, 100000);
         }
+        update(rt[u], 1, 100000, c[u], 1);
+        ans[u] = tr[rt[u]].ans;
     };
-    dfs1(dfs1,1,0);
-    int cntd=0;
-    auto dfs2=[&](auto &&self,int u,int pre)->void{
-        dfn[u]=++cntd;
-        seg[cntd]=u;
-        if(son[pre]==u) top[u]=top[pre];
-        else top[u]=u;
-        if(son[u]) self(self,son[u],u);
-        for(auto v:g[u]){
-            if(v==pre||v==son[u]) continue;
-            self(self,v,u);
-        }
-    };
-    dfs2(dfs2,1,0);
-    //[l,r] 好像 并不对。线段树的话咋搞呢。
+    dfs(dfs, 1, 0);
+    for(int i = 1; i <= n; i++)
+        cout << ans[i] << " \n"[i == n];
 }
 
 int main()
@@ -78,10 +124,15 @@ int main()
     ios::sync_with_stdio(false);
     cin.tie(0);
     cout.tie(0);
+#else
+    int START = clock();
 #endif
     int T = 1;
     // cin >> T;
     while (T--)
         ChatGptDeepSeek();
+#ifdef YUANSHEN
+    cerr << "Run Time: " << (clock() - START)/1000.0 << "ms\n";
+#endif
     return 0;
 }
