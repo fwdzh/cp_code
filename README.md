@@ -14,4 +14,6 @@ github: https://github.com/fwdzh/cp_code
 
 博客仓库: https://github.com/fwdzh/fwdzh.github.io
 
+bilibili: https://space.bilibili.com/1203883675
+
 每次会同时在 `gitee` 和 `github` 提交。
