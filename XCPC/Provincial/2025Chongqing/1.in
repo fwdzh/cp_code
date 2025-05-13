@@ -1,0 +1,7 @@
+100
+Push 1000000000
+Repeat
+Push 7
+Pop
+Pop
+Pop
