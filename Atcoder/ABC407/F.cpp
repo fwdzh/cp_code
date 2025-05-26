@@ -38,22 +38,34 @@ constexpr int INF = 1000000000;
 constexpr ll LNF = 1000000000000000000LL;
 
 // Date: 2025-05-26
-// Time: 17:34:48
+// Time: 17:43:01
 void ChatGptDeepSeek()
 {
     int n;
     cin >> n;
-    priority_queue<int> pq;
-    ll ans = 0;
-    for(int i = 1; i <= 2 * n; i++){
-        int x; cin >> x;
-        pq.push(x);
-        if(i & 1){
-            ans += pq.top();
-            pq.pop();
-        }
+    // 这不是很简单，只需要知道每个数在的最大的范围使得他是最大值
+    // 感觉两个单调栈就对完了是不是
+    vi a(n + 1), l(n + 1, 1), r(n + 1, n);
+    for(int i = 1; i <= n; i++)
+        cin >> a[i];
+    vi stk;
+    for(int i = 1; i <= n; i++){
+        while(!stk.empty() && a[stk.back()] < a[i])
+            stk.pop_back();
+        if(stk.size()) l[i] = stk.back() + 1;
+        if(stk.empty() || a[stk.back()] > a[i])
+            stk.push_back(a[i]);
     }
-    cout << ans << '\n';
+    stk.clear();
+    for(int i = n; i >= 1; i--){
+        while(!stk.empty() && a[stk.back()] < a[i])
+            stk.pop_back();
+        if(stk.size()) r[i] = stk.back() - 1;
+        if(stk.empty() || a[stk.back()] > a[i])
+            stk.push_back(a[i]);
+    }
+    // 不对，，还有相同的数字啊，是不是有点难搞了。。。
+    // 看上次出现的地方，会不会重合，以及
 }
 
 int main()
