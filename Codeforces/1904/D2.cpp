@@ -44,7 +44,9 @@ struct ST{
     vector<vector<int>> MAX;
     ST(vector<int> &a, vector<int> &b){
         int n = a.size();
-        MIN = MAX = vector<vector<int>> (n, vector<int> (__lg(n) + 1));
+        // MIN = MAX = vector<vector<int>> (n, vector<int> (__lg(n) + 1));
+        MIN.assign(n, vi(__lg(n) + 1));
+        MAX.assign(n, vi(__lg(n) + 1));
         n--;
         for(int i = 1; i <= n; i++)
             MAX[i][0] = a[i], MIN[i][0] = b[i];
