@@ -48,7 +48,7 @@ void ChatGptDeepSeek()
     for(int i = 1; i <= n; i++){
         cin >> a[i];
         dp[a[i]] = 0;
-        g = __gcd(g, a[i]);
+        g = gcd(g, a[i]);
     }
     if(*min_element(ALL(a)) == g){
         cout << n - count(ALL(a), g) << '\n';
@@ -56,8 +56,10 @@ void ChatGptDeepSeek()
     }
     for(int i = 1; i <= n; i++){
         // vi ndp(dp);
-        for(int j = 1; j <= 5000; j++)
-            cmin(dp[__gcd(j, a[i])], dp[j] + 1);
+        for(int j = 1; j <= 5000; j++){
+            if(dp[j] != INF)
+                cmin(dp[gcd(j, a[i])], dp[j] + 1);
+        }
         // dp = ndp;
     }
     cout << dp[g] + n - 1 << '\n';
