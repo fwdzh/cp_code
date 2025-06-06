@@ -45,43 +45,34 @@ void ChatGptDeepSeek()
     cin >> n >> q;
     string s;
     cin >> s;
-    vi cnt(3), cnt1(3);
-    // vc<vc<deque<int>>> que(3, vc<deque<int>>(3));
-    vc<vc<set<int>>> que(3, vc<set<int>>(3));
+    vc<vc<set<int>>> op(3, vc<set<int>>(3));
     for(int i = 1; i <= q; i++) {
         char x, y;
         cin >> x >> y;
-        que[x - 'a'][y - 'a'].insert(i);
+        op[x - 'a'][y - 'a'].insert(i);
     }
-    vi stk;
-    for(int i = 0; i < n; i++)
-        if(s[i] == 'a') stk.push_back(i);
     for(int i = 0; i < n; i++){
         if(s[i] == 'a'){
-            cout << s[i];
-            continue;
+            cout << s[i];continue;
         }
         int x = s[i] - 'a'; 
-        if(que[x][0].size()){
+        if(op[x][0].size()){
             s[i] = 'a';
-            que[x][0].erase(que[x][0].begin());
+            op[x][0].erase(op[x][0].begin());
         }else{
-            if(que[x][3 - x].size() && que[3 - x][0].size()){
-                int small = *que[x][3 - x].begin();
-                auto it = que[3 - x][0].upper_bound(small);
-                if(it != que[3 - x][0].end()){
-                    que[x][3 - x].erase(que[x][3 - x].begin());
-                    que[3 - x][0].erase(it);
+            if(op[x][3 - x].size() && op[3 - x][0].size()){
+                int small = *op[x][3 - x].begin();
+                auto it = op[3 - x][0].upper_bound(small);
+                if(it != op[3 - x][0].end()){
+                    op[x][3 - x].erase(op[x][3 - x].begin());
+                    op[3 - x][0].erase(it);
                     s[i] = 'a';
-                    cout << s[i];
-                    continue;
+                    cout << s[i];continue;
                 }
             }
-            if(3 - x < x){
-                if(que[x][3 - x].size()){
-                    que[x][3 - x].erase(prev(que[x][3 - x].end()));
-                    s[i] = 'b';
-                }
+            if(3 - x < x && op[x][3 - x].size()){
+                op[x][3 - x].erase(prev(op[x][3 - x].end()));
+                s[i] = 'b';
             }
         }
         cout << s[i];

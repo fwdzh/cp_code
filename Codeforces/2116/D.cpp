@@ -37,27 +37,38 @@ using vc = vector<T>;
 constexpr int INF = 1000000000;
 constexpr ll LNF = 1000000000000000000LL;
 
-// Date: 2025-05-31
-// Time: 23:16:55
+// Date: 2025-06-06
+// Time: 08:05:35
 void ChatGptDeepSeek()
 {
-    int n, m;
-    double p;
-    cin >> n >> m >> p;
-    vc<vc<double>> dp(401, vc<double> (400 * n + 1));
-    // 1e5 * 20, 2e6
-    vi h(n + 1);
-    int mn = INF, sum = 0;
+    int n, q;
+    cin >> n >> q;
+    vi b(n + 1), l(n + 1);
     for(int i = 1; i <= n; i++){
-        cin >> h[i];
-        sum += h[i];
-        cmin(mn, h[i]);
-        if(i == n){
-            dp[mn][sum - n] = 1.0;
-        }
+        cin >> b[i];
+        l[i] = b[i];
     }
-    for(int min_val = mn; min_val >= 0; min_val--){
-
+    vc<array<int, 3>> op(q);
+    for(int i = q - 1; i >= 0; i--){
+        cin >> op[i][0] >> op[i][1] >> op[i][2];
+    }
+    for(auto [x, y, z] : op){
+        cmax(l[x], l[z]);
+        cmax(l[y], l[z]);
+        if(z != x && z != y)
+            l[z] = 0;
+    }
+    vi c(l);
+    for(int i = q - 1; i >= 0; i--){
+        auto [x, y, z] = op[i];
+        c[z] = min(c[x], c[y]);
+    }
+    if(b != c){
+        cout << "-1\n";
+        return;
+    }
+    for(int i = 1; i <= n; i++){
+        cout << (l[i] ? l[i] : 1) << " \n" [ i == n];
     }
 }
 
