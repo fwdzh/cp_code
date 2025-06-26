@@ -4,6 +4,31 @@
 using namespace std;
 // created: 2025-06-25 22:16:33
 void solve(){
+    int n, k;
+    cin >> n >> k;
+    vector<int> a(n + 1);
+    for(int i = 1; i <= n; i++)
+        cin >> a[i];
+    sort(a.begin() + 1, a.end());
+    auto check = [&](auto x) -> bool{
+        int c1 = 0, c2 = 0;
+        long long s1 = 0, s2 = 0;
+        for(int i = 1; i <= n; i++){
+            if(a[i] <= x){
+                c1++;
+                s1 += x - a[i];
+            }else{
+                c2++;
+                s2 += a[i] - x;
+            }
+        }
+    };
+    int lo = 0, hi = int(1e6) + 1;
+    while(lo < hi - 1){
+        int mid = (lo + hi) >> 1;
+        if(check(mid)) lo = mid;
+        else hi = mid;
+    }
     
 }
 /* <think>
