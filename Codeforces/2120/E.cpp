@@ -47,6 +47,9 @@ void solve(){
 这里只是随便想一下，感觉也是做了一些思考了，题解等会还是启动一下吧
 
 属于是思考得还没deepseek多吧。。。
+
+二分最小的车辆数量
+
 </think> */
 int main(){
     ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
