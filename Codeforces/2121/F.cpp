@@ -10,7 +10,7 @@ void solve()
         cin >> a[i];
         pre[i] = pre[i - 1] + a[i];
     }
-    unordered_map<long long, int> mp;
+    map<long long, int> mp;
     long long ans = 0;
     for(int i = 1, j = 0; i <= n; i++){
         if(a[i] == x){
