@@ -184,29 +184,24 @@ using vc = vector<T>;
 constexpr int INF = 1000000000;
 constexpr ll LNF = 1000000000000000000LL;
 
-// Date: 2025-07-07
-// Time: 15:49:47
-constexpr int N = int(1e5);
-bitset<N + 1> is;
-vector<int> primes;
+// Date: 2025-07-12
+// Time: 20:44:24
 void ChatGptDeepSeek()
 {
-    int n;
-    cin >> n;
-    vi ans(n + 1);
-    for(auto p : views::reverse(primes)){
-        vi s;
-        for(int i = p; i <= n; i += p){
-            if(!ans[i])
-                s.push_back(i);
-        }
-        for(int i = 0; i < sz(s); i++)
-            ans[s[i]] = s[(i + 1) % sz(s)];
-    }
-    for(int i = 1; i <= n; i++){
-        if(!ans[i]) ans[i] = i;
-        cout << ans[i] << " \n" [i == n];
-    }
+    int n, m;
+    cin >> n >> m;
+    vl a(n);
+    for(int i = 0; i < n; i++)
+        cin >> a[i];
+    sort(all(a));
+    vl d(n - 1);
+    for(int i = 0; i < n - 1; i++)
+        d[i] = a[i + 1] - a[i];
+    sort(all(d), greater<>());
+    ll ans = a[n - 1] - a[0];
+    for(int i = 0; i < min(m - 1, n - 1); i++)
+        ans -= d[i];
+    cout << ans << '\n';
 }
 
 int main()
@@ -215,14 +210,8 @@ int main()
     ios::sync_with_stdio(false);
     cin.tie(nullptr), cout.tie(nullptr);
 #endif
-    for(int i = 2; i <= N; i++){
-        if(is[i]) continue;
-        primes.push_back(i);
-        for(ll j = 1LL * i * i; j <= N; j += i)
-            is[j] = 1;
-    }
     int T = 1;
-    cin >> T;
+    // cin >> T;
     while (T--)
         ChatGptDeepSeek();
     return 0;

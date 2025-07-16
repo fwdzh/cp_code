@@ -184,29 +184,50 @@ using vc = vector<T>;
 constexpr int INF = 1000000000;
 constexpr ll LNF = 1000000000000000000LL;
 
-// Date: 2025-07-07
-// Time: 15:49:47
-constexpr int N = int(1e5);
-bitset<N + 1> is;
-vector<int> primes;
+// Date: 2025-07-12
+// Time: 20:13:32
 void ChatGptDeepSeek()
 {
-    int n;
-    cin >> n;
-    vi ans(n + 1);
-    for(auto p : views::reverse(primes)){
-        vi s;
-        for(int i = p; i <= n; i += p){
-            if(!ans[i])
-                s.push_back(i);
+    vl s; //1000000
+    auto get = [](string s) {
+        ll res = 0;
+        for(auto c : s)
+            res = res * 10 + c - '0';
+        return res;
+    };
+    for(int i = 1; i <= int(1e6); i++){
+        string str = to_string(i);
+        string t = str;
+        reverse(all(t));
+        s.push_back(get(str + t));
+        s.push_back(get(str + t.substr(1, sz(t))));
+        // if(s.back() == s[sz(s) - 2])
+        //     cerr << i << '\n';
+    }
+    sort(all(s));
+    int a; ll n;
+    cin >> a >> n;
+    ll ans = 0;
+    for(auto p : s){
+        // cerr << p << '\n';
+        if(p > n) break;
+        string t;
+        auto check = [a](ll p){
+            string t;
+            while(p){
+                t += char('0' + (p % a));
+                p /= a;
+            }
+            string s = t;
+            reverse(all(s));
+            return s == t;
+        };
+        if(check(p)) {
+            // cerr << p << '\n';
+            ans += p;
         }
-        for(int i = 0; i < sz(s); i++)
-            ans[s[i]] = s[(i + 1) % sz(s)];
     }
-    for(int i = 1; i <= n; i++){
-        if(!ans[i]) ans[i] = i;
-        cout << ans[i] << " \n" [i == n];
-    }
+    cout << ans << '\n';
 }
 
 int main()
@@ -215,14 +236,8 @@ int main()
     ios::sync_with_stdio(false);
     cin.tie(nullptr), cout.tie(nullptr);
 #endif
-    for(int i = 2; i <= N; i++){
-        if(is[i]) continue;
-        primes.push_back(i);
-        for(ll j = 1LL * i * i; j <= N; j += i)
-            is[j] = 1;
-    }
     int T = 1;
-    cin >> T;
+    // cin >> T;
     while (T--)
         ChatGptDeepSeek();
     return 0;
