@@ -1,4 +1,4 @@
-#define YUANSHEN
+// #define YUANSHEN
 #if defined(YUANSHEN)
 #include "/home/skadi/codes/cp_code/template/debug.hpp"
 #else
@@ -42,55 +42,36 @@ ll ksm(ll a, ll b) {
     }
     return res;
 }
-void ChatGptDeepSeek() // Date: 2025-07-22
-{                      // Time: 23:01:06 
+void ChatGptDeepSeek() // Date: 2025-07-25
+{                      // Time: 18:03:59 
     int n, m;
     cin >> n >> m;
-    vector<array<int, 4>> vec(n);
+    // vector<array<int, 4>> vec(n);
+    vector<vector<pii>> vec(m + 1);
     for(int i = 0; i < n; i++){
-        for(int j = 0; j < 4; j++)
-            cin >> vec[i][j];
+        int l, r, p, q;
+        cin >> l >> r >> p >> q;
+        vec[r].push_back({l, p * ksm(q, mod - 2) % mod});
     }
-    ranges::sort(vec, [](array<int, 4> x, array<int, 4> y){
-        return x[0] == y[0] ? x[1] < y[1] : x[0] < y[0];
-    });
-    vl dp(m + 1), po(m + 1);
-    vector<vector<array<int, 2>>> vec1(m + 1);
-    // 
-    ll now = 1;
-    po[0] = 1;
-    for(int i = 1, j = 1; i <= n; i++){
-        while(j <= n && vec[j][0] == i){
-            auto [l, r, p, q] = vec[j];
-            now = now * p * ksm(q, mod - 2) % mod;
-            vec1[r].push_back({p, q});
-            j++;
+    vector<long long> pre(m + 1), dp(m + 1);
+    pre[0] = 1, dp[0] = 1;
+    for(int i = 1; i <= m; i++){
+        pre[i] = pre[i - 1];
+        for(auto [l, p] : vec[i]){
+            pre[i] = pre[i] * (1 - p) % mod;
         }
-        po[i] = now * po[i - 1] % mod;
-        for(auto [p, q] :vec1[i]){
-            now = now * q * ksm(p, mod - 2) % mod;
+        pre[i] = (pre[i] + mod) % mod;
+    }
+    auto get = [&](int l, int r){
+        return pre[r] * ksm(pre[l - 1], mod - 2) % mod;
+    };
+    for(int i = 1; i <= m; i++){
+        for(auto [l, p] : vec[i]){
+            dp[i] = dp[i] + dp[l - 1] * p % mod * get(l, i) % mod * ksm(1 - p, mod - 2) % mod;
+            dp[i] = dp[i] % mod;
         }
     }
-    dbg(po);
-    dp[0] = 1;
-    ranges::sort(vec, [](array<int, 4> x, array<int, 4> y){
-        return x[1] == y[1] ? x[0] < y[0] : x[1] < y[1];
-    });
-    for(auto [l, r, p, q] : vec){
-        ll p1 = p * ksm(q, mod - 2) % mod;
-        // ll p0 = ((1 - p1) + mod) % mod;
-        auto get = [&](int l, int r){
-            ll res = po[r] * ksm(po[l - 1], mod - 2) % mod;
-            res = res * ksm(ksm(p1, r - l + 1), mod - 2) % mod;
-            return res;
-        };
-        dp[r] = (dp[r] + dp[l - 1] * p1 % mod * get(l, r)) % mod;
-        // cerr << dp[r] << '\n';
-        // dp[l - 1] = dp[l - 1] * p0 % mod;
-    }
-    /*
-    [l, r - 1] 需要乘 p0 吧                               
-    */
+    dp[m] = (dp[m] + mod) % mod;
     cout << dp[m] << '\n';
 }
 

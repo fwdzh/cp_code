@@ -157,12 +157,12 @@ using namespace std;
 #define rep(N) for (int i = 1; i <= N; i++)
 
 template <typename T1, typename T2>
-void cmin(T1& x, const T2& y)
+void cmin(T1 &x, const T2 &y)
 {
     x = x < y ? x : y;
 }
 template <typename T1, typename T2>
-void cmax(T1& x, const T2& y)
+void cmax(T1 &x, const T2 &y)
 {
     x = x > y ? x : y;
 }
@@ -190,45 +190,73 @@ void ChatGptDeepSeek()
 {
     int n;
     cin >> n;
-    vc<array<int, 3>> vec(n);
-    for (int i = 0; i < n; i++) {
-        cin >> vec[i][0] >> vec[i][1];
-        vec[i][2] = i + 1;
-    }
-    ranges::sort(vec, [](array<int, 3> x, array<int, 3> y){
-        return x[0] + x[1] < y[0] + y[1];
-    });
-    for(int i = 0; i < n; i++){
-        auto [a, b, c] = vec[i];
-        cout << a << " " << b << " \n";
-    }
-    int ans = 0;
-    for(int i = 0; i < n / 2; i += 1)
+    vc<array<int, 2>> vec(n);
+    for (int i = 0; i < n; i++)
     {
-        ans += abs(vec[i][1] - vec[i + n / 2][1]) + abs(vec[i][0] - vec[i + n / 2][0]);
-        // cout << format("{} {}\n", vec[i][2], vec[i + n / 2][2]);
+        cin >> vec[i][0] >> vec[i][1];
     }
-    cerr << ans << '\n';
-/*
-|x1 - x0| + |y1 - y0|
+    /*
+    Xl Yl + Xr Yr
+    Xl Yr + Xr Yl
+    */
+    vi tmp(n);
+    for (int i = 0; i < n; i++)
+        tmp[i] = vec[i][0];
+    ranges::sort(tmp);
+    int X = tmp[n / 2 - 1];
+    for (int i = 0; i < n; i++)
+        tmp[i] = vec[i][1];
+    ranges::sort(tmp);
+    int Y = tmp[n / 2 - 1];
 
-max(x1, x0) - min(x1, x0) + max(y1, y0) - min(y1, y0)
+    vi v1, v2, v3, v4;
+    
+    auto work = [&](){
+        int cnt = count_if(all(vec), [&](array<int, 2> x){
+            return x[0] < X;
+        });
+        for(auto &[x, _] : vec){
+            if(x == X) cnt++;
+            if(cnt > n / 2) x++;
+        }
+        cnt = count_if(all(vec), [&](array<int, 2> x){
+            return x[1] < Y;
+        });
+        for(auto &[_, y] : vec){
+            if(y == Y) cnt++;
+            if(cnt > n / 2) y++;
+        }
+    };
+    work();
+    for (int i = 0; i < n; i++)
+    {
+        auto [x, y] = vec[i];
+        if (x <= X && y <= Y)
+            v1.push_back(i);
+        else if (x > X && y > Y)
+            v2.push_back(i);
+        else if (x <= X && y > Y)
+            v3.push_back(i);
+        else
+            v4.push_back(i);
+    }
 
-x1 + y1 + x0 + y0 - 2min(x1, x0) - 2min(y1, y0)
--2    min(x1, x0) + min(y1, y0)
-要不还是按x排序吧
-
-如果前面的有 x+y 的和比当前的 x+y 小
-那么y肯定也小于x
-
-*/
+    assert(sz(v1) == sz(v2) && sz(v3) == sz(v4));
+    for (int i = 0; i < sz(v1); i++)
+    {
+        cout << v1[i] + 1 << " " << v2[i] + 1 << '\n';
+    }
+    for (int i = 0; i < sz(v3); i++)
+    {
+        cout << v3[i] + 1 << " " << v4[i] + 1 << '\n';
+    }
 }
 
 int main()
 {
 #ifndef YUANSHEN
-    // ios::sync_with_stdio(false);
-    // cin.tie(nullptr), cout.tie(nullptr);
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr), cout.tie(nullptr);
 #endif
     int T = 1;
     cin >> T;
