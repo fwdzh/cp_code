@@ -2,24 +2,91 @@
 using namespace std;
 using LL = long long;
 
+constexpr int N = 200000 + 5;
+vector<int> g[N], in[N];
+int w[N], c[N], f[N][21], dep[N], dfn[N], tot;
+LL ans;
+void dfs(int u, int p)
+{
+    dfn[u] = ++tot, dep[u] = dep[p] + 1;
+    for(int i = 1; i <= 20; i++)
+        f[u][i] = f[f[u][i - 1]][i - 1];
+    for(auto v : g[u]){
+        if(v == p) continue;
+        f[v][0] = u;
+        dfs(v, u);
+    }
+}
+int lca(int x, int y)
+{
+    if(dep[x] < dep[y]) swap(x, y);
+    for(int i = 0, z = dep[x] - dep[y]; z; i++, z >>= 1)
+        if(z & 1) x = f[x][i];
+    if(x == y) return x;
+    for(int i = 20; i >= 0; i--){
+        if(f[x][i] != f[y][i])
+            x = f[x][i], y = f[y][i];
+    }
+    return f[x][0];
+}
+set<int> build(vector<int> p)
+{
+    int k = p.size();
+    ranges::sort(p, [&](int x, int y){return dfn[x] < dfn[y];});
+    for(int i = 0; i + 1 < k; i++)
+        p.push_back(lca(p[i], p[i + 1]));
+    ranges::sort(p, [&](int x, int y){return dfn[x] < dfn[y];});
+    p.erase(unique(p.begin(), p.end()), p.end());
+    k = p.size();
+    for(int i = 0; i + 1 < k; i++)
+        p.push_back(lca(p[i], p[i + 1]));
+    return set<int> (p.begin(), p.end());
+}
+int dfs2(int u, int p)
+{
+    if(c[u] == 0 && in[u].size() == 1)
+        c[u] = in[u][0];
+    if(in[u].size() > 1) ans += w[u];
+    int color = c[u];
+    for(auto v : g[u]){
+        if(v == p) continue;
+        color = max(color, dfs2(v, u));
+    }
+    if(color && (c[u] == 0)) c[u] = color;
+    else if(c[u] == 0) c[u] = c[p];
+    return color;
+}
 void solve()
 {
     int n, k; cin >> n >> k;
-    vector<vector<int>> g(n + 1);
-    vector<int> w(n + 1), c(n + 1);
+    vector<vector<int>> colors(k + 1);
     for(int i = 1; i <= n; i++) cin >> w[i];
-    for(int i = 1; i <= n; i++) cin >> c[i];
+    for(int i = 1; i <= n; i++){
+        cin >> c[i];
+        colors[c[i]].push_back(i);
+    }
     for(int i = 1; i < n; i++){
         int u, v; cin >> u >> v;
         g[u].push_back(v);
         g[v].push_back(u);
     }
-    LL ans = 0;
-    auto dfs = [&](auto &&self, int u, int pre) -> void {
-        for(auto v : g[u]){
-
+    tot = 0;
+    dfs(1, 0);
+    for(int i = 1; i <= k; i++){
+        if(colors[i].size()){
+            set<int> st = build(colors[i]);
+            for(auto x : st)
+                in[x].push_back(i);
         }
-    };
+    }
+    ans = 0;
+    dfs2(1, 0);
+    cout << ans << '\n';
+    for(int i = 1; i <= n; i++){
+        cout << c[i] << " \n" [i == n];
+        g[i].clear(), in[i].clear();
+    }
+
 }
 int main()
 {
@@ -51,4 +118,14 @@ lca(x, y) = u， 仅当 x, y 分别属于 u 的两个子树
 
 solution:
     要用 virtual tree，不会，看他再怎么说吧
+
+同种颜色建虚树
+如果一个点 只在一个虚树里 那就直接记这个颜色
+如果不在任何一个虚树 那就肯定不用加
+如果在两个以上的虚树里 肯定要加
+
+不在任意一个虚树的点，随便从子树找个颜色
+在恰好一个虚树的点，选虚树的颜色
+在两个虚树中的点，取子树的颜色
+
 */
