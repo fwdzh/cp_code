@@ -3,9 +3,8 @@ using namespace std;
 using LL = long long;
 
 constexpr int N = 200000 + 5;
-vector<int> g[N], in[N];
-int w[N], c[N], f[N][21], dep[N], dfn[N], tot;
-LL ans;
+vector<int> g[N], colors[N];
+int w[N], c[N], f[N][21], dep[N], dfn[N], tot, cnt[N], col[N], cutie[N];
 void dfs(int u, int p)
 {
     dfn[u] = ++tot, dep[u] = dep[p] + 1;
@@ -29,64 +28,74 @@ int lca(int x, int y)
     }
     return f[x][0];
 }
-set<int> build(vector<int> p)
+set<int> build(vector<int>& p)
 {
-    int k = p.size();
+    set<int> st;
     ranges::sort(p, [&](int x, int y){return dfn[x] < dfn[y];});
-    for(int i = 0; i + 1 < k; i++)
-        p.push_back(lca(p[i], p[i + 1]));
-    ranges::sort(p, [&](int x, int y){return dfn[x] < dfn[y];});
-    p.erase(unique(p.begin(), p.end()), p.end());
-    k = p.size();
-    for(int i = 0; i + 1 < k; i++)
-        p.push_back(lca(p[i], p[i + 1]));
-    return set<int> (p.begin(), p.end());
+    for(int i = 0, k = p.size(); i + 1 < k; i++)
+        st.insert(lca(p[i], p[i + 1]));
+    return st;
 }
-int dfs2(int u, int p)
+void dfs1(int u, int cc)
 {
-    if(c[u] == 0 && in[u].size() == 1)
-        c[u] = in[u][0];
-    if(in[u].size() > 1) ans += w[u];
-    int color = c[u];
+    if(c[u]) cc = c[u];
+    else c[u] = cc;
     for(auto v : g[u]){
-        if(v == p) continue;
-        color = max(color, dfs2(v, u));
+        if(v == f[u][0]) continue;
+        dfs1(v, cc);
     }
-    if(color && (c[u] == 0)) c[u] = color;
-    else if(c[u] == 0) c[u] = c[p];
-    return color;
 }
 void solve()
 {
     int n, k; cin >> n >> k;
-    vector<vector<int>> colors(k + 1);
     for(int i = 1; i <= n; i++) cin >> w[i];
+    for(int i = 0; i <= k; i++) colors[i].clear();
     for(int i = 1; i <= n; i++){
         cin >> c[i];
         colors[c[i]].push_back(i);
+        g[i].clear(), cnt[i] = 0, col[i] = 0, cutie[i] = 0;
     }
     for(int i = 1; i < n; i++){
         int u, v; cin >> u >> v;
         g[u].push_back(v);
         g[v].push_back(u);
     }
+    if(colors[0].size() == n){
+        cout << "0\n";
+        for(int i = 1; i <= n; i++)
+            cout << "1 ";
+        cout << '\n';
+        return;
+    }
     tot = 0;
     dfs(1, 0);
     for(int i = 1; i <= k; i++){
         if(colors[i].size()){
             set<int> st = build(colors[i]);
-            for(auto x : st)
-                in[x].push_back(i);
+            for(auto x : st){
+                if(c[x]){
+                    if(c[x] != i) cutie[x] = 1;
+                    continue;
+                }
+                cnt[x]++, col[x] = i;
+            }
         }
     }
-    ans = 0;
-    dfs2(1, 0);
+    LL ans = 0;
+    for(int i = 1; i <= n; i++){
+        if(cutie[i] || cnt[i] > 1) ans += w[i];
+        if(cnt[i] && c[i] == 0) c[i] = col[i];
+    }
+    for(int i = 1; i <= n; i++){
+        if(c[i]){
+            dfs1(1, c[i]);
+            break;
+        }
+    }
     cout << ans << '\n';
     for(int i = 1; i <= n; i++){
         cout << c[i] << " \n" [i == n];
-        g[i].clear(), in[i].clear();
     }
-
 }
 int main()
 {
@@ -94,38 +103,3 @@ int main()
     int T; cin >> T; while(T--)
     {solve();} return 0;
 }
-/*
-感觉一点想法没有 于是看了题解
-hint 1:
-    有一些节点一开始就是cute的
-hint 2:
-    可以不增加新的cute节点
-
-啊？为什么可以不增加新的cute节点？
-好像可以有点想法的。
-
-对于 u
-lca(x, y) = u， 仅当 x, y 分别属于 u 的两个子树
-所以看 u 的子树里，重复出现过的颜色
-
-如果 >= 2，那么 u 一定为可爱节点，
-如果 = 1，看是否等于 c[u]，若未涂色，则设置
-
-若整个子树都没有颜色，那就先别管
-
-难道直接set存，看有没有重复？
-这是不是显然不太行 时间复杂度似乎有点坏
-
-solution:
-    要用 virtual tree，不会，看他再怎么说吧
-
-同种颜色建虚树
-如果一个点 只在一个虚树里 那就直接记这个颜色
-如果不在任何一个虚树 那就肯定不用加
-如果在两个以上的虚树里 肯定要加
-
-不在任意一个虚树的点，随便从子树找个颜色
-在恰好一个虚树的点，选虚树的颜色
-在两个虚树中的点，取子树的颜色
-
-*/
