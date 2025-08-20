@@ -1,0 +1,68 @@
+// #define YUANSHEN
+#if defined(YUANSHEN)
+#include "/home/skadi/codes/cp_code/template/debug.hpp"
+#else
+#include <bits/stdc++.h>
+using namespace std;
+#define dbg(...) 42
+#endif
+template <typename T1, typename T2>
+void cmin(T1& x, const T2& y)
+{
+    x = x < y ? x : y;
+}
+template <typename T1, typename T2>
+void cmax(T1& x, const T2& y)
+{
+    x = x > y ? x : y;
+}
+using ll = long long;
+using ull = unsigned long long;
+using vi = vector<int>;
+using vl = vector<ll>;
+using pii = pair<int, int>;
+using pll = pair<ll, ll>;
+#define fixset(x) fixed << setprecision(x)
+#define fi first
+#define se second
+#define sz(x) (int)(x).size()
+#define all(x) (x).begin(), (x).end()
+#define ALL(x) (x).begin() + 1, (x).end()
+constexpr int INF = 1000000000;
+constexpr ll LNF = 1000000000000000000LL;
+
+void ChatGptDeepSeek() // Date: 2025-08-20
+{                      // Time: 14:51:57 
+    int n, m; cin >> n >> m;
+    vector<int> dp(1 << n, INF);
+    dp[0] = 0;
+    for(int _ = 0; _ < m; _++){
+        int c, k; cin >> c >> k;
+        vector<int> g(k);
+        int x = 0;
+        for(int i = 0; i < k; i++){
+            cin >> g[i];
+            x |= 1 << g[i];
+        }
+        for(int i = 0; i < (1 << n); i++){
+            if(dp[i] == INF) continue;
+            cmin(dp[i | x], dp[i] + c);
+        }
+    }
+    if(dp[(1 << n) - 1] == INF) dp[(1 << n) - 1] = -1;
+    cout <<  dp[(1 << n) - 1] << '\n';
+}
+
+int main()
+{
+#ifndef YUANSHEN
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+    cout.tie(0);
+#endif
+    int T = 1;
+    // cin >> T;
+    while (T--)
+        ChatGptDeepSeek();
+    return 0;
+}
