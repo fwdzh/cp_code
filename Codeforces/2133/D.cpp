@@ -8,13 +8,12 @@ void solve()
     vector<int> h(n + 1);
     for(int i = 1; i <= n; i++) cin >> h[i];
     vector<LL> dp(n + 1, LLONG_MAX);
-    dp[n] = h[n];
-    // 后缀的答案是可以算的 h[i] + max(h[i + 1] - i, 0) + max(h[i + 2] - 1, 0) ... 
-    for(int i = n - 1; i >= 1; i--){
-        
-        dp[i] = min(dp[i], dp[i + 1] + h[i] - i);
+    dp[0] = 0;
+    dp[1] = h[1];
+    for(int i = 2; i <= n; i++){
+        dp[i] = min(dp[i - 1] + h[i] - 1, dp[i - 2] + h[i - 1] + max(0, h[i] - i + 1));
     }
-    cout << dp[1] << "\n";
+    cout << dp[n] << '\n';
 }
 int main()
 {
