@@ -3,7 +3,16 @@ using namespace std;
 using LL = long long;
 
 constexpr int N = 12500;
+constexpr int num = 119; // 每行放多少个，最多119
 
+int b[num + 1];
+set<pair<int, int>> st; // {lines, L}
+int get(int x)
+{
+    int cnt = x / num;
+    if(!cnt) return 0;
+    return (N + cnt - 1) / cnt;
+}
 int ask(const vector<int> &a)
 {
     cout << "? " << a.size() << " ";
@@ -12,44 +21,49 @@ int ask(const vector<int> &a)
     cout << endl;
     int res; cin >> res; return res;
 }
-pair<int, int> pa[32];
 void solve()
 {
-    int x = ask(vector<int>(31, N));
-    assert(x == 0 || x == 31 || x == 16 || x == 11 || x == 8 || x == 7 || x == 6 || x == 4);
-    vector<int> s;
-    if(x == 0){
-        //
+    int lines = ask(vector<int> (N, num));
+    if(lines == 0){
+        lines = ask(vector<int> (N, 1));
+        cout << "! " << find(b + 1, b + num + 1, lines) - b << endl;
+        return;
     }
-    auto [L, R] = pa[x];
+    int L, R;
+    auto it = st.lower_bound({lines, -1});
+    L = it -> second;
+    if(it == st.begin()) R = 8 * N;
+    else R = prev(it) -> second;
+    cerr << R << '\n';
+    vector<int> s;
     for(int i = 1; i + L <= R; i++)
         s.push_back(i), s.push_back(L);
-    x = ask(s);
-    cout << L + x - int(s.size()) << endl;
+    lines = ask(s);
+    cout << "! " << L + 2 * (R - L) - lines << endl;
 }
 
 int main()
 {
+    // freopen("1.err", "w", stderr);
     ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
-    pa[0] = {1, N - 1};
-    pa[31] = {N, 2 * N - 1};
-    pa[16] = {2 * N, 3 * N - 1};
-    pa[11] = {3 * N, 4 * N - 1};
-    pa[8] = {4 * N, 5 * N - 1};
-    pa[7] = {5 * N, 6 * N - 1};
-    pa[6] = {6 * N, 7 * N - 1};
-    pa[4] = {8 * N, 8 * N};
-    int t; cin >> t; while(t--)
-    {solve();} return 0;
+    auto Insert = [&](int x, int y){
+        auto it = st.lower_bound({x, -1});
+        if(it == st.end() || it -> first != x){
+            st.insert({x, y});
+            // cerr << x << " " << y << '\n';
+        }
+    };
+    for (int i = num; i <= 8 * N; i++)
+        Insert(get(i), i);
+    // for(auto [x, y] : st)
+    //     cerr << x << " " << y << '\n';
+    for(int i = 1; i <= num; i++)
+        b[i] = (N + i - 1) / i;
+    int t;
+    cin >> t;
+    while (t--)
+    {
+        solve();
+    }
+    return 0;
 }
-/*
-[1, N - 1], 0
-[N, 2N - 1], 31
-[2N, 3N - 1], 16
-[3N, 4N - 1], 11
-[4N, 5N - 1], 8
-[5N, 6N - 1], 7
-[6N, 7N - 1], 6
-[7N, 8N - 1], 5
-8N, 4
-*/
