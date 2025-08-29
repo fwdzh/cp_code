@@ -5,7 +5,30 @@ constexpr int inf = int(1e9);
 
 void solve()
 {
-    
+    int n; cin >> n;
+    vector<int> X(n), Y(n);
+    // max x + y, and min -x + y
+    LL mx = -int(2e9), mn = int(2e9);
+    for(int i = 0; i < n; i++){
+        cin >> X[i] >> Y[i];
+        mx = max(mx, 0ll + X[i] + Y[i]);
+        mn = min(mn, 0ll - X[i] + Y[i]);
+    }
+    auto ask = [&](char c, int k){
+        cout << "? " << c << " " << k << endl;
+        LL x; cin >> x;
+        return x;
+    };
+    ask('U', inf), ask('U', inf);
+    ask('R', inf);
+    LL x1 = ask('R', inf) + mx - 4ll * inf;
+    // 4 * inf + x + y - max(xi + yi)
+    // (x + 2inf - xi) + (yi - y + 2inf)
+    // yi - xi + x - y + 4inf, min(yi - xi)
+    ask('D', inf), ask('D', inf), ask('D', inf);
+    LL x2 = ask('D', inf) - mn - 4ll * inf;
+    LL x = (x1 + x2) / 2, y = x - x2;
+    cout << "! " << x << " " << y << endl;
 }
 
 int main()
