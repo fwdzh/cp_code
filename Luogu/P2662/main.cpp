@@ -38,7 +38,7 @@ void solve()
     while(pq.size()){
         auto [dist, id] = pq.top(); pq.pop();
         if(dis[id] < dist) continue;
-        for(auto w : vec){
+        for(auto w : vec){  
             LL to = (dist + w) % len;
             if(dis[to] > dist + w){
                 dis[to] = dist + w;
@@ -48,6 +48,10 @@ void solve()
     }
     LL ans = -1;
     for(int i = 0; i < len; i++){
+        if(dis[i] == LLONG_MAX){
+            ans = -1;
+            break;
+        }
         if(dis[i] != i) ans = max(ans, dis[i] - len);
         // cerr << dis[i] << '\n';
     }
