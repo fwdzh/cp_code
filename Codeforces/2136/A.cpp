@@ -39,6 +39,7 @@ void solve()
     }
     else
         cout << "no\n";
+    //RRKRRKRR
 }
 
 int main()

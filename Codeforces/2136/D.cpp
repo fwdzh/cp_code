@@ -21,12 +21,16 @@ void solve()
     };
     ask('U', inf), ask('U', inf);
     ask('R', inf);
-    LL x1 = ask('R', inf) + mx - 4ll * inf;
-    // 4 * inf + x + y - max(xi + yi)
-    // (x + 2inf - xi) + (yi - y + 2inf)
-    // yi - xi + x - y + 4inf, min(yi - xi)
+    LL x1 = ask('R', inf) + mx - 4ll * inf; // X + Y
+    /*
+    (X + 2inf - xi) + (Y + 2inf - yi) 
+    */
     ask('D', inf), ask('D', inf), ask('D', inf);
-    LL x2 = ask('D', inf) - mn - 4ll * inf;
+    LL x2 = ask('D', inf) - mn - 4ll * inf; // X - Y
+    /*
+    (X + 2inf - xi) + (yi - (Y - 2inf)) 
+    X - Y + 4inf + yi - xi
+    */
     LL x = (x1 + x2) / 2, y = x - x2;
     cout << "! " << x << " " << y << endl;
 }
