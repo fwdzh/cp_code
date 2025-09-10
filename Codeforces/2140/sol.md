@@ -30,3 +30,38 @@
 
 现在我们考虑 $n$ 为奇数的情况，实际上是类似的，因为去掉一个线段就变成偶数了。
 
+### code
+
+```cpp
+void ChatGptDeepSeek()
+{
+    int n; cin >> n;
+    vector<pii> seg(n);
+    ll ans = 0;
+    for(int i = 0; i < n; i++){
+        int l, r; cin >> l >> r;
+        seg[i] = {l, r};
+        ans += r - l + r;
+    }
+    sort(seg.begin(), seg.end(), [](pii x, pii y){
+        return x.first + x.second < y.first + y.second;
+    });
+    ll sub = 0;
+    for(int i = 0; i < n / 2; i++)
+        sub += seg[i].first + seg[i].second;
+    if(n % 2 == 0)
+        cout << ans - sub << '\n';
+    else{
+        ll res = 0;
+        for(int i = n / 2; i < n; i++)
+            res = max(res, ans - seg[i].second - sub);
+        int x = seg[n / 2].first + seg[n / 2].second;
+        for(int i = 0; i < n / 2; i++){
+            int y = seg[i].first + seg[i].second - seg[i].second;
+            res = max(res, ans - sub - x + y);
+        }
+        cout << res << '\n';
+    }
+}
+```
+
