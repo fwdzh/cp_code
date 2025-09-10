@@ -190,13 +190,31 @@ void ChatGptDeepSeek()
 {
     int n; cin >> n;
     vector<pii> seg(n);
-    LL ans = 0;
+    ll ans = 0;
     for(int i = 0; i < n; i++){
         int l, r; cin >> l >> r;
         seg[i] = {l, r};
-        ans += r - l;
+        ans += r - l + r;
     }
-    //拿出 n / 2 个 r，减去 n / 2 个 l，使得这个值最大
+    sort(seg.begin(), seg.end(), [](pii x, pii y){
+        return x.first + x.second < y.first + y.second;
+    });
+    ll sub = 0;
+    for(int i = 0; i < n / 2; i++)
+        sub += seg[i].first + seg[i].second;
+    if(n % 2 == 0)
+        cout << ans - sub << '\n';
+    else{
+        ll res = 0;
+        for(int i = n / 2; i < n; i++)
+            res = max(res, ans - seg[i].second - sub);
+        int x = seg[n / 2].first + seg[n / 2].second;
+        for(int i = 0; i < n / 2; i++){
+            int y = seg[i].first + seg[i].second - seg[i].second;
+            res = max(res, ans - sub - x + y);
+        }
+        cout << res << '\n';
+    }
 }
 
 int main()
