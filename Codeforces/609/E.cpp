@@ -14,15 +14,16 @@ int f[N];
 int find(int x){return f[x] == x ? f[x] : f[x] = find(f[x]);}
 int dfn[N], dep[N], fa[N], son[N], top[N], siz[N], rnk[N], W[N], cntd;
 void dfs1(int u, int p){
-    dfn[u] = ++cntd, siz[u] = 1, fa[u] = p, dep[u] = dep[p] + 1, rnk[cntd] = u;
+    siz[u] = 1, fa[u] = p, dep[u] = dep[p] + 1;
     for(auto [v, w] : g[u]){
         if(v == p) continue;
         dfs1(v, u);
-        siz[u] += siz[v], W[dfn[v]] = w;
+        siz[u] += siz[v], W[v] = w;
         if(siz[v] > siz[son[u]]) son[u] = v;
     }
 }
 void dfs2(int u){
+    dfn[u] = ++cntd, rnk[cntd] = u;
     top[u] = son[fa[u]] == u ? top[fa[u]] : u;
     if(son[u]) dfs2(son[u]);
     for(auto [v, w] : g[u]){
@@ -37,7 +38,7 @@ void dfs2(int u){
 int tr[N << 2];
 void build(int p, int l, int r){
     if(l == r){
-        tr[p] = W[l];
+        tr[p] = W[rnk[l]];
         return;
     }
     build(ls, l, mi), build(rs, mi + 1, r);
