@@ -1,39 +1,64 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 using namespace std;
-// created: 2025-09-17 17:26:57
 using LL = long long;
+
 constexpr int mod = 1000000007;
-int ksm(ll a, LL b){
+constexpr int N = 15;
+int f[N], inv[N];
+LL ksm(LL a, LL b){
     LL res = 1;
     while(b){
-        if(b & 1) res = res * a;
+        if(b & 1) res = res * a % mod;
         a = a * a % mod;
         b >>= 1;
     }
     return res;
 }
-void solve(){
+int C(int n, int m){
+    if(m > n) return 0;
+    return 1LL * f[n] * inv[n - m] % mod *inv[m] % mod;
+}
+void solve()
+{
     int n, m; cin >> n >> m;
-    int ans = ksm(7, n);
-    vector<int> ok(1 << 7, 1);
-    for(int _ = 1; _ <= m; _++){
+    vector<bool> ok(1 << 7);
+    for(int i = 0; i < m; i++){
         int k; cin >> k;
         int mask = 0;
-        for(int i = 0; i < k; i++){
-            char c; cin >> c;
-            mask |= 1 << (c - 'a');
+        for(int j = 0; j < k; j++){
+            char x; cin >> x;
+            mask |= 1 << (x - 'a');
         }
-        ok[mask] = 0;
+        for(int j = 0; j < (1 << 7); j++)
+            ok[mask | j] = true;
     }
-    for(int mask = 1; mask < (1 << 7); mask++){
-        if(ok[mask]){
-            int res = 0, cnt = __builtin_popcount(mask);
-            for()
+    int ans = 0;
+    for(int mask = 0; mask < (1 << 7); mask++){
+        if(!ok[mask]){
+            // 求长度为 n 的由指定字符构成的字符串的数量
+            int cnt = __builtin_popcount(mask);
+            for(int i = cnt; i >= 1; i--){
+                if((cnt - i) & 1){
+                    ans = (ans - C(cnt, i) * ksm(i, n) % mod) % mod;
+                }else{
+                    ans = (ans + C(cnt, i) * ksm(i, n) % mod) % mod;
+                }
+            }
         }
     }
+    cout << (ans + mod) % mod << "\n";
 }
-int main(){
+
+int main()
+{
     ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
+    f[0] = 1;
+    for(int i = 1; i < N; i++)
+        f[i] = 1LL * f[i - 1] * i % mod;
+    inv[N - 1] = ksm(f[N - 1], mod - 2);
+    for(int i = N - 2; i >= 0; i--){
+        inv[i] = 1LL * inv[i + 1] * (i + 1) % mod;
+    }
     // int t; cin >> t; while(t--)
     {solve();} return 0;
 }
