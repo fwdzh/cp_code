@@ -54,7 +54,7 @@ void solve()
         while(R > r) del(R--);
         while(R < r) add(++R);
         set<int> st;
-        for(int _ = 1; _ <= 50 && st.size() < 2; _++){
+        for(int _ = 1; _ <= 35 && st.size() < 2; _++){
             int index = rnd(l, r);
             // cerr << index << " " << cnt[index] << '\n';
             if(cnt[a[index]] > (r - l + 1) / 3) st.insert(b[a[index]]);
