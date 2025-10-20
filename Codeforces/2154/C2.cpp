@@ -12,76 +12,49 @@ vector<int> get(int k){
     }
     int n = k;
     while(k != 1){
-        // cerr << k << "\n";
         int p = minp[k];
         res[n].push_back(p);
         while(k % p == 0)
             k /= p;
     }
-    // for(auto p : res)
-    //     cerr << p << " ";
-    // cerr << '\n';
     return res[n];
 }
 void solve()
 {
     int n; cin >> n;
-    vector<int> a(n + 1), b(n + 1);
-    for(int i = 1; i <= n; i++)
-        cin >> a[i];
-    for(int i = 1; i <= n; i++)
-        cin >> b[i];
-    int cnt = 0;
-    for(int i = 1; i <= n; i++)
-        if(a[i] % 2 == 0) cnt++;
-    if(cnt >= 2) cout << "0\n";
-    else{
-        // {
-        //     vector<int> c(a);
-        //     sort(c.begin() + 1, c.end());
-        //     for(int i = 1; i + 1 <= n; i++){
-        //         if(c[i] > 1 && c[i] == c[i + 1]){
-        //             cout << "0\n";
-        //             return;
-        //         }
-        //     }
-        // }
-        vector<int> ord(n + 1);
-        iota(ord.begin() + 1, ord.end(), 1);
-        sort(ord.begin() + 1, ord.end(), [&](int x, int y){
-            return b[x] < b[y];
-        });
-        LL ans = b[ord[1]] + b[ord[2]];
-        if(cnt){
-            if(a[ord[1]] & 1) ans = min(ans, 0LL + b[ord[1]]);
-            if(a[ord[2]] & 1) ans = min(ans, 0LL + b[ord[2]]);
+    vector<pair<int, int>> vec(n + 1);
+    for(int i = 1; i <= n; i++) cin >> vec[i].first;
+    for(int i = 1; i <= n; i++) cin >> vec[i].second;
+    sort(vec.begin() + 1, vec.end(), [](pair<int, int> &x, pair<int, int> &y){
+        return x.second < y.second;
+    });
+    LL ans = 1e18;
+    vector<int> divisors;
+    for(int i = 1; i <= n; i++){
+        for(auto p : get(vec[i].first)){
+            if(cnt1[p]) ans = 0;
+            cnt1[p]++;
+            divisors.push_back(p);
         }
-        for(int i = 1; i <= n; i++){
-            for(auto p : get(a[i])){
-                if(cnt1[p]) ans = 0;
-                cnt1[p]++;
-            }
-        }
-        for(int i = 1; i <= n; i++){
-            for(auto p : get(a[i]))
-                cnt1[p]--;
-            for(LL j = 1; j * b[i] < ans && a[i] + j <= N; j++){
-                LL x = a[i] + j;
-                for(auto p : get(x)){
-                    if(cnt1[p]){
-                        ans = min(ans, j * b[i]);
-                        break;
-                    }
-                }
-            }
-            for(auto p : get(a[i]))
-                cnt1[p]++;
-        }
-        for(int i = 1; i <= n; i++)
-            for(auto x : get(a[i]))
-                cnt1[x] = 0;
-        cout << ans << "\n";
     }
+    ans = min(ans, 0LL + vec[1].second + vec[2].second);
+    for(int i = 1; i <= n && ans; i++){
+        if(i == 1){
+            for(auto d : divisors){
+                if(cnt1[d] == 1 && vec[i].first % d == 0) continue;
+                ans = min(ans, 1LL * (d - vec[i].first % d) * vec[i].second);
+            }
+        }else{
+            for(auto p : get(vec[i].first + 1)){
+                if(cnt1[p])
+                    ans = min(ans, 0LL + vec[i].second);
+            }
+        }
+    }
+    for(int i = 1; i <= n; i++)
+        for(auto p : get(vec[i].first))
+            cnt1[p] = 0;
+    cout << ans << "\n";
 }
 int main()
 {
@@ -94,12 +67,10 @@ int main()
         for(auto p : primes){
             if(i * p > N) break;
             minp[i * p] = p;
+            if(i % p == 0) break;
         }
     }
     res.assign(N + 1, {});
-    // get(144);
-    // return 0;
-    // cerr << primes.size() << " " << primes.back() << '\n';
     int t; cin >> t;
     while(t--)
         solve();
