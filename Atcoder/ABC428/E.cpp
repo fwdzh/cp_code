@@ -11,7 +11,7 @@ void solve()
         g[u].push_back(v);
         g[v].push_back(u);
     }
-    auto get = [&](int s) -> vector<int> {
+    function<vector<int>(int)> get = [&](int s) {
         vector<int> dis(n + 1, n + 1);
         dis[s] = 0;
         queue<int> q;
